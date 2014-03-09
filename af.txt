@@ -1,0 +1,15 @@
+4 Etats
+
+0 initial
+b 0
+a 0 1
+
+1
+b 2
+a 2
+
+2
+a 3
+
+3 terminal
+
