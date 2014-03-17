@@ -10,36 +10,67 @@ import java.io.PrintStream;
 import java.io.FileNotFoundException;
 import java.io.File;
 
+/**
+ * Structure d'un Automate fini
+ */
 public class Automate extends EnsEtat {
 
+	/**
+	 * Stocke les etats initiaux
+	 */
     private EnsEtat initiaux;
 
+	/**
+	 * Automate vide
+	 */
     public Automate() {
         super();
         initiaux = new EnsEtat();
     }
     
+    /**
+	 * Automate auquel on ajoute tous les etats accessibles depuis l'etat en parametre
+	 * @param etat l'etat
+	 */
     public Automate(Etat etat){
 		this();
 		this.ajouteEtatRecursif(etat);
 	}
 	
+	/**
+	 * Automate a partir d'un arbre d'une expression reguliere
+	 * @param arbre l'arbre contenant l'expression reguliere
+	 */
 	public Automate(Arbre arbre){
 		this();
 		this.fromArbre(arbre);
 	}
     
+    /**
+	 * Automate a partir de la lecture d'un fichier
+	 * @param fichier fichier texte contenant un automate
+	 */
     public Automate(String fichier){
     	this();
     	this.readFile(fichier);
     }
 
+	/**
+	 * Ajoute l'etat a l'automate
+	 * @param e etat a ajouter
+	 * @return succes de l'ajout
+	 */
 	public boolean ajouteEtatSeul(Etat e){
 		if(!this.add(e)) return false;
 		if(e.isInit()) initiaux.add(e);
 		return true;
 	}
 
+	/**
+	 * Ajoute l'etat et ses etats accessibles a l'automate
+	 * @param e etat a ajouter et sur lequel appliquer la recursion
+	 * @return succes de tous les ajouts
+	 */
 	public boolean ajouteEtatRecursif(Etat e){
 		if(ajouteEtatSeul(e)){
 			EnsEtat succ = e.succ();
@@ -52,6 +83,10 @@ public class Automate extends EnsEtat {
 		}
 	}
 
+	/**
+	 * Test si l'automate est deterministe
+	 * @return resultat du test
+	 */
 	public boolean estDeterministe(){
 		if(this.isEmpty()) return true;
 
@@ -67,15 +102,31 @@ public class Automate extends EnsEtat {
 		return true;
 	}
 	
+	/**
+	 * Cree l'union de deux automates
+	 * @param a l'automate auquel appliquer l'union avec this
+	 * @return l'union des deux automates
+	 */
 	public Automate union(Automate a){
 		return union(a, true);
 	}
 	
+	/**
+	 * Cree l'intersection de deux automates
+	 * @param a l'automate auquel appliquer l'intersection avec this
+	 * @return l'intersection des deux automates
+	 */
 	public Automate intersection(Automate a){
 		return union(a, false);
 	}
 
-	public Automate union(Automate a, boolean estUnion){
+	/**
+	 * Cree l'union ou l'intersection de deux automates
+	 * @param a l'automate auquel appliquer l'intersection ou l'union avec this
+	 * @param estUnion vrai si on realiser l'union, faux pour l'intersection
+	 * @return l'union ou l'intersection des deux automates
+	 */
+	private Automate union(Automate a, boolean estUnion){
 		if(a == null) return null;
 		
 		Automate union = new Automate();
@@ -166,6 +217,10 @@ public class Automate extends EnsEtat {
 		return union;
 	}
 
+	/**
+	 * Cree l'automate determinise
+	 * @return l'automate determinise
+	 */
 	public Automate determinise(){
 		if(this.estDeterministe()) return this;
 		Automate det = new Automate();
@@ -231,6 +286,10 @@ public class Automate extends EnsEtat {
 		return det;
 	}
 
+	/**
+	 * Cree l'automate complet
+	 * @return l'automate complet
+	 */
 	public Automate complete(){
 		Etat puit = null;
 		boolean reussi = false;
@@ -257,6 +316,10 @@ public class Automate extends EnsEtat {
 		return this;
 	}
 
+	/**
+	 * Cree le complementaire
+	 * @return l'automate complementaire
+	 */
 	public Automate complementaire(){
 		Automate det = this.determinise();
 		det.complete();
@@ -266,6 +329,10 @@ public class Automate extends EnsEtat {
 		return det;
 	}
 
+	/**
+	 * Cree l'automate miroir
+	 * @return l'automate miroir
+	 */
 	public Automate miroir(){
 		Automate miroir = new Automate();
 		for(Etat etat : this){
@@ -282,12 +349,21 @@ public class Automate extends EnsEtat {
 
 		return miroir;
 	}
-
+	
+	/**
+	 * Test si le mot est accepte par l'automate
+	 * @param s le mot a tester
+	 * @return le resultat du test
+	 */
 	public boolean accepte(String s){
 		return initiaux.accepte(s, 0);
 	}
 	
-	public void fromArbre(Arbre arbre){
+	/**
+	 * Cree l'automate de l'arbre representant une expression rationnelle
+	 * @param arbre arbre d'une expression rationnelle
+	 */
+	private void fromArbre(Arbre arbre){
 		initiaux.clear();
 		this.clear();
 		
@@ -320,6 +396,10 @@ public class Automate extends EnsEtat {
 		}
 	}
 	
+	/**
+	 * Ecrit dans le fichier la represention de l'automate
+	 * @param nomFichier nom du fichier
+	 */
 	public void toFile(String nomFichier){
 		try{
 			new PrintStream(nomFichier).println(this.toString());
@@ -327,7 +407,11 @@ public class Automate extends EnsEtat {
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * Cree l'automate contenu dans le fichier
+	 * @param fichier nom du fichier contenant l'automate
+	 */
 	public void readFile(String fichier){
 		try{
     		Scanner sc = new Scanner(new File(fichier));
@@ -370,10 +454,17 @@ public class Automate extends EnsEtat {
 		return super.toString();
 	}
 	
+	/**
+	 * Representation alternative d'un automate
+	 * @return une chaine de caractere de l'automate
+	 */
 	public String affiche(){
 		return super.affiche();
 	}
 
+	/**
+	 * Getter des initiaux
+	 */
     public EnsEtat getInitiaux() {
         return initiaux;
     }

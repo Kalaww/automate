@@ -3,11 +3,27 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * Noeud d'une expression rationnelle pour la concatenation ou "ou"
+ */
 public class Binaire extends Arbre {
 
+	/**
+	 * Sous arbre gauche
+	 */
 	public Arbre gauche;
+	
+	/**
+	 * Sous arbre droit
+	 */
 	public Arbre droit;
 
+	/**
+	 * Initialise le noeud binaire avec ces sous arbres et son symbole
+	 * @param symbole symbole + ou .
+	 * @param gauche sous arbre gauche
+	 * @param droit sous arbre droit
+	 */
 	public Binaire(char symbole, Arbre gauche, Arbre droit){
 		this.symbole = symbole;
 		this.gauche = gauche;

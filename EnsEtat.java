@@ -5,18 +5,36 @@ import java.util.Set;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Ensemble d'Etat unique
+ * @see Etat
+ */
 public class EnsEtat extends HashSet<Etat> {
-
+	
+	/**
+	 * Map memoire lors d'un determinisation d'un automate
+	 */
 	protected HashMap<EnsEtat, Etat> mapDeterminise;
-
+	
+	/**
+	 * Map memoire lors d'une union/intersectiond d'un automate
+	 */
 	protected HashMap<Etat[], Etat> mapUnion;
 
+	/**
+	 * Ensemble d'etat vide
+	 */
 	public EnsEtat() {
 		super();
 		mapDeterminise = null;
 		mapUnion = null;
 	}
 
+	/**
+	 * Ensemble d'etat successeur de par la lettre en parametre
+	 * @param c lettre de la transition
+	 * @return l'ensemble d'etat atteignable par la lettre
+	 */
 	public EnsEtat succ(char c){
 		EnsEtat a = new EnsEtat();
 		for(Etat etat : this){
@@ -26,6 +44,10 @@ public class EnsEtat extends HashSet<Etat> {
 		return a;
 	}
 
+	/**
+	 * Ensemble d'etat successeur sur tout l'alphabet
+	 * @return l'ensemble d'etat atteignable sur tout l'alphabet
+	 */
 	public EnsEtat succ(){
 		EnsEtat a = new EnsEtat();
 		for(Etat etat : this){
@@ -35,20 +57,23 @@ public class EnsEtat extends HashSet<Etat> {
 		return a;
 	}
 
+	/**
+	 * Test si l'ensemble d'etat contient un etat terminal
+	 * @return resultat du test
+	 */
 	public boolean contientTerminal(){
 		for(Etat etat : this){
 			if(etat.isTerm()) return true;
 		}
 		return false;
 	}
-
-	public boolean accepte(String s){
-		for(Etat etat : this){
-			if(etat.accepte(s, 0)) return true;
-		}
-		return false;
-	}
 	
+	/**
+	 * Test si l'ensemble d'etat accepte le sous mot demarrant a la position i
+	 * @param s mot a tester
+	 * @param i position de depart
+	 * @return resultat du test
+	 */
 	public boolean accepte(String s, int i){
 		if(i == s.length()) return this.contientTerminal();
 		if(this.succ(s.charAt(i)) != null){
@@ -57,6 +82,10 @@ public class EnsEtat extends HashSet<Etat> {
 		return false;
 	}
 
+	/**
+	 * Recupere un ensemble des lettre du langage de l'ensemble d'etat
+	 * @return ensemble de lettre
+	 */
 	public Set<Character> alphabet(){
 		Set<Character> a = new HashSet<Character>();
 		for(Etat etat : this){
@@ -67,6 +96,11 @@ public class EnsEtat extends HashSet<Etat> {
 		return a;
 	}
 
+	/**
+	 * Test si deux ensembles d'etats ont les memes etats
+	 * @param e l'ensemble d'etat auquel comparer this
+	 * @return resultat du test
+	 */
 	public boolean egale(EnsEtat e){
 		for(Etat etat : this){
 			if(e.getEtat(etat.hashCode()) == null) return false;
@@ -77,7 +111,7 @@ public class EnsEtat extends HashSet<Etat> {
 		}
 		return true;
 	}
-
+	
 	@Override
 	public String toString(){
 		String res = "";
@@ -88,6 +122,10 @@ public class EnsEtat extends HashSet<Etat> {
 		return res;
 	}
 	
+	/**
+	 * Representation alternative d'un ensemble d'etats
+	 * @return une chaine de caractere d'un ensemble d'etats
+	 */
 	public String affiche(){
 		String res = "";
 		
@@ -114,6 +152,10 @@ public class EnsEtat extends HashSet<Etat> {
 		return res;
 	}
 
+	/**
+	 * Representation du contenu de l'ensemble d'etats
+	 * @return une chaine de caracteres
+	 */
 	public String listEtats(){
 		String res = "(";
 		for(Etat etat : this){
@@ -123,6 +165,11 @@ public class EnsEtat extends HashSet<Etat> {
 		return res+")";
 	}
 
+	/**
+	 * Recupere l'etat avec l'id en parametre, null s'il n'y est pas
+	 * @param id l'id de l'etat a chercher
+	 * @return l'etat
+	 */
 	public Etat getEtat(int id){
 		for(Etat etat : this){
 			if(etat.hashCode() == id){
@@ -132,10 +179,18 @@ public class EnsEtat extends HashSet<Etat> {
 		return null;
 	}
 
+	/**
+	 * Memorisation du mappage de la determinisation
+	 * @param e mappage utilisé
+	 */
 	public void setMapDeterminise(HashMap<EnsEtat, Etat> e){
 		this.mapDeterminise = e;
 	}
 
+	/**
+	 * Memorisation du mappage de l'union/intersection
+	 * @param e mappage utilisé
+	 */
 	public void setMapUnion(HashMap<Etat[], Etat> e){
 		this.mapUnion = e;
 	}

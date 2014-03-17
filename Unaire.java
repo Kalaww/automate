@@ -3,15 +3,28 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * Noeud d'une expression rationnelle pour mettre une expression rationnelle en etoile
+ */
 public class Unaire extends Arbre {
 
+	/**
+	 * Sous arbre du noeud
+	 */
 	public Arbre fils;
 	
+	/**
+	 * Initialise le noeud unaire
+	 */
 	public Unaire(){
 		this.symbole = '*';
 		this.fils = null;
 	}
 
+	/**
+	 * Initialise l'arbre unaire en lui ajoutant un fils
+	 * @param fils fils à ajouter
+	 */
 	public Unaire(Arbre fils){
 		this();
 		this.fils = fils;

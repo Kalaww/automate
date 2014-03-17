@@ -3,8 +3,15 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * Feuille contenant un symbole de l'expression rationelle
+ */
 public class Feuille extends Arbre{
 
+	/**
+	 * Initialise la feuille sur le symbole
+	 * @param symbole symbole de la feuille
+	 */
 	public Feuille(char symbole){
 		this.symbole = symbole;
 		this.contientMotVide = symbole == Arbre.MOT_VIDE;
