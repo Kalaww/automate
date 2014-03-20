@@ -113,6 +113,24 @@ public class EnsEtat extends HashSet<Etat> {
 	}
 	
 	@Override
+	public boolean equals(Object obj){
+		if (obj == null || getClass() != obj.getClass()){
+			return false;
+		}else{
+			final EnsEtat other = (EnsEtat) obj;
+			if(this.isEmpty() && other.isEmpty()) return null;
+			for(Etat etat : this){
+				if(e.getEtat(etat.hashCode()) == null) return false;
+			}
+	
+			for(Etat etat : e){
+				if(this.getEtat(etat.hashCode()) == null) return false;
+			}
+			return true;
+		}
+	}
+
+	@Override
 	public String toString(){
 		String res = "";
 		res += this.size() + " Etats\n";

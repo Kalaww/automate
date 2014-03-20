@@ -359,6 +359,63 @@ public class Automate extends EnsEtat {
 		return initiaux.accepte(s, 0);
 	}
 	
+	
+	public Automate minimisation(){
+		if(this.estDeterministe()) return minimisationMoore();
+		else return this.determinise().minimisationMoore();
+	}
+	
+	/*
+	public Automate minimisationMoore(){
+		Automate minimale = new Automate();
+		ArrayList<EnsEtat> vieux = new ArrayList<EnsEtat>();
+		ArrayList<EnsEtat> nouveau = new ArrayList<EnsEtat>();
+		EnsEtat un = new EnsEtat();
+		EnsEtat deux = new EnsEtat();
+		vieux.add(un);
+		vieux.add(deux);
+		HashSet<Character> alphabet = this.alphabet();
+		Character[] alphabetIt = new Character[alphabet.size()];
+		
+		//Creation d'un alphabet iterable toujours dans le meme ordre
+		int compteur = 0;
+		for(Character c : alphabet){
+			alphabetIt[compteur++] = new Character(c.charValue());
+		}
+		
+		//Creation des deux premiers groupes
+		for(Etat etat : this){
+			Etat tmp = new Etat(etat.estInit(), etat.estTerm(), etat.hashCode());
+			minimale.ajouteEtatSeul(tmp)
+			if(etat.estTerm()) un.add(tmp);
+			else deux.add(tmp);
+		}
+		
+		compteur = 0;
+		for(Etat etat : minimale){
+			for(Character c : alphabetIt){
+				Etat ref = this.getEtat(etat.hashCode());
+				EnsEtat succEns = ref.succ(c.charValue());
+				if(succEns.equals(un)){
+					if(!nouveau.contains(succEns)) nouveau.add(succEns);
+					etat.transitions.put(c, 
+				
+			}
+		}
+		
+		//boucle des ordres
+		while(true){
+			for(Etat etat : minimale){
+				for(Character c : alphabetIt){
+					
+				}
+			}
+		}
+		
+		
+	}
+	*/
+	
 	/**
 	 * Cree l'automate de l'arbre representant une expression rationnelle
 	 * @param arbre arbre d'une expression rationnelle
