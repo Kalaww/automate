@@ -118,12 +118,12 @@ public class EnsEtat extends HashSet<Etat> {
 			return false;
 		}else{
 			final EnsEtat other = (EnsEtat) obj;
-			if(this.isEmpty() && other.isEmpty()) return null;
+			if(this.isEmpty() && other.isEmpty()) return true;
 			for(Etat etat : this){
-				if(e.getEtat(etat.hashCode()) == null) return false;
+				if(other.getEtat(etat.hashCode()) == null) return false;
 			}
 	
-			for(Etat etat : e){
+			for(Etat etat : other){
 				if(this.getEtat(etat.hashCode()) == null) return false;
 			}
 			return true;

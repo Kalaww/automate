@@ -189,7 +189,7 @@ public class Main{
 		*/
 
 		// ------ Expression infixe
-		
+		/*
 		Feuille a = new Feuille('a');
 		Feuille b1 = new Feuille('b');
 		Feuille b2 = new Feuille('B');
@@ -203,7 +203,7 @@ public class Main{
 		System.out.println("Premiers : "+trois.premiers+"\nDerniers : "+trois.derniers+"\nSucc : "+trois.succ().toString());
 		Automate af = new Automate(trois);
 		System.out.println("--Automate--\n"+af.affiche());
-		
+		*/
 
 		// ------ Lecture postfixe
 		/*
@@ -214,6 +214,35 @@ public class Main{
 		// ------ Test lecture fichier
 		//Automate aft = new Automate("af.txt");
 		//System.out.println(aft.affiche());
+		
+		
+		// ------ TEST MOORE
+		Etat un = new Etat(true, false, 1);
+		Etat deux = new Etat(false, false, 2);
+		Etat trois = new Etat(false, false, 3);
+		Etat quatre = new Etat(false, false, 4);
+		Etat cinq = new Etat(false, false, 5);
+		Etat six = new Etat(false, true, 6);
+		Etat sept = new Etat(false, true, 7);
+		
+		un.ajouteTransition('a', six);
+		un.ajouteTransition('b', deux);
+		deux.ajouteTransition('a', sept);
+		deux.ajouteTransition('b', un);
+		trois.ajouteTransition('a', un);
+		trois.ajouteTransition('b', six);
+		quatre.ajouteTransition('a', trois);
+		quatre.ajouteTransition('b', six);
+		cinq.ajouteTransition('a', quatre);
+		cinq.ajouteTransition('b', sept);
+		six.ajouteTransition('a', sept);
+		six.ajouteTransition('b', cinq);
+		sept.ajouteTransition('a', six);
+		sept.ajouteTransition('b', cinq);
+		
+		Automate mooretest = new Automate(un);
+		System.out.println("Test moore\ndet : "+mooretest.estDeterministe());
+		System.out.println(mooretest.minimisation());
 	}
 		
 }
