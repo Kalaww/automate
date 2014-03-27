@@ -285,35 +285,55 @@ public class Automate extends EnsEtat {
 		det.setMapDeterminise(map);
 		return det;
 	}
+	
+	/**
+	 * Creer une copie de l'automate
+	 * @return copie de l'automate
+	 */
+	public Automate copy(){
+		Automate cp = new Automate();
+		for(Etat e : this){
+			cp.ajouteEtatSeul(new Etat(e.isInit(), e.isTerm(), e.hashCode()));
+		}
+		for(Etat e : cp){
+			Etat lie = this.getEtat(e.hashCode());
+			for(Map.Entry<Character, EnsEtat> entre : lie.transitions.entrySet()){
+				for(Etat succ : entre.getValue()){
+					e.ajouteTransition(entre.getKey().charValue(), succ);
+				}
+			}
+		}
+		return cp;
+	}
 
 	/**
 	 * Cree l'automate complet
 	 * @return l'automate complet
 	 */
 	public Automate complete(){
+		Automate copie = this.copy();
 		Etat puit = null;
 		boolean reussi = false;
 		int i = 0;
 		while(!reussi){
 			puit = new Etat(false, false, i);
-			if(!this.contains(puit)){
+			if(!copie.contains(puit)){
 				reussi = true;
-				System.out.println("Ajoute etat :"+i);
 			}
 			i++;
 		}
 		
-		this.ajouteEtatSeul(puit);
+		copie.ajouteEtatSeul(puit);
 
-		Set<Character> alphabet = this.alphabet();
-		for(Etat etat : this){
+		Set<Character> alphabet = copie.alphabet();
+		for(Etat etat : copie){
 			for(Character a : alphabet){
 				if(etat.succ(a.charValue()) == null){
 					etat.ajouteTransition(a.charValue(), puit);
 				}
 			}
 		}
-		return this;
+		return copie;
 	}
 
 	/**
