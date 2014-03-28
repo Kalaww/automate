@@ -210,6 +210,8 @@ public class Main{
 		Arbre arbre = Arbre.lirePostfixe("ab+*b.c.");
 		System.out.println(arbre.succ().toString());
 		*/
+		Automate a = new Automate(Arbre.lirePostfixe("ab.*a."));
+		System.out.println(a);
 		
 		// ------ Test lecture fichier
 		//Automate aft = new Automate("af.txt");
@@ -217,6 +219,7 @@ public class Main{
 		
 		
 		// ------ TEST MOORE
+		/*
 		Etat un = new Etat(true, false, 1);
 		Etat deux = new Etat(false, false, 2);
 		Etat trois = new Etat(false, false, 3);
@@ -243,6 +246,7 @@ public class Main{
 		Automate mooretest = new Automate(un);
 		System.out.println("Test moore\ndet : "+mooretest.estDeterministe());
 		System.out.println(mooretest.minimisation());
+		*/
 	}
 		
 }

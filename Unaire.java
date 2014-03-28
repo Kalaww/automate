@@ -54,6 +54,6 @@ public class Unaire extends Arbre {
 
 	@Override
 	public String toString(){
-		return fils.toString()+symbole;
+		return "("+fils.toString()+")"+symbole;
 	}
 }
