@@ -35,6 +35,33 @@ public class Unaire extends Arbre {
 		this.derniers.addAll(fils.derniers);
 	}
 	
+	/**
+	 * Une copie du noeud unaire
+	 * @return la copie
+	 */
+	public Unaire copy(){
+		return new Unaire(this.fils.copy());
+	}
+	
+	/**
+	 * Residuel du noeud Unaire par la lettre passée en argument
+	 * @param c lettre du residuel
+	 * @return le langage résiduel
+	 */
+	public Arbre residuelBis(char c){
+		return new Binaire(Arbre.SYMBOLE_CONCAT, fils.residuelBis(c), this.copy());
+	}
+	
+	/**
+	 * Simplification des feuilles mot vide
+	 * @return l'arbre sans les mots vides
+	 */
+	public Arbre simplification(){
+		fils = fils.simplification();
+		if(fils.symbole == Arbre.MOT_VIDE) return new Feuille(Arbre.MOT_VIDE);
+		return this;
+	}
+	
 	public Map<Feuille, Set<Feuille>> succ(){
 		HashMap<Feuille, Set<Feuille>> map = new HashMap<Feuille, Set<Feuille>>();
 		map.putAll(fils.succ());
@@ -54,6 +81,6 @@ public class Unaire extends Arbre {
 
 	@Override
 	public String toString(){
-		return "("+fils.toString()+")"+symbole;
+		return "{"+fils.toString()+"}"+symbole;
 	}
 }

@@ -50,6 +50,42 @@ public class Binaire extends Arbre {
 		}
 	}
 	
+	/**
+	 * Une copie du noeud binaire
+	 * @return la copie
+	 */
+	public Binaire copy(){
+		return new Binaire(this.symbole, this.gauche.copy(), this.droit.copy());
+	}
+	
+	/**
+	 * Residuel du noeud Binaire par la lettre passée en argument
+	 * @param c lettre du residuel
+	 * @return le langage résiduel
+	 */
+	public Arbre residuelBis(char c){
+		if(this.symbole == Arbre.SYMBOLE_CONCAT){
+			if(gauche.contientMotVide) return new Binaire(Arbre.SYMBOLE_OU, new Binaire(Arbre.SYMBOLE_CONCAT, gauche.residuelBis(c), droit.copy()), droit.residuelBis(c));
+			return new Binaire(Arbre.SYMBOLE_CONCAT, gauche.residuelBis(c), droit.copy());
+		}else{
+			return new Binaire(Arbre.SYMBOLE_OU, gauche.residuelBis(c), droit.residuelBis(c));
+		}
+	}
+	
+	/**
+	 * Simplification des feuilles mot vide
+	 * @return l'arbre sans les mots vides
+	 */
+	public Arbre simplification(){
+		gauche = gauche.simplification();
+		droit = droit.simplification();
+		if(gauche.symbole == Arbre.MOT_VIDE && droit.symbole == Arbre.MOT_VIDE) return new Feuille(Arbre.MOT_VIDE);
+		if(gauche.symbole == Arbre.MOT_VIDE) return droit;
+		if(droit.symbole == Arbre.MOT_VIDE) return gauche;
+		return this;
+	}
+	
+	
 	public Map<Feuille, Set<Feuille>> succ(){
 		HashMap<Feuille, Set<Feuille>> map = new HashMap<Feuille, Set<Feuille>>();
 		map.putAll(gauche.succ());
@@ -73,7 +109,7 @@ public class Binaire extends Arbre {
 
 	@Override
 	public String toString(){
-		if(symbole == Arbre.SYMBOLE_CONCAT) return gauche.toString()+symbole+droit.toString();
+		if(symbole == Arbre.SYMBOLE_CONCAT) return "["+gauche.toString()+symbole+droit.toString()+"]";
 		else return "("+gauche.toString()+symbole+droit.toString()+")";
 	}
 }

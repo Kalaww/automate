@@ -46,8 +46,39 @@ public abstract class Arbre {
 
 	/**
 	 * Successeurs (transition) du sous arbre du noeud
+	 * @return le HashMap des successeurs
 	 */
 	public abstract Map<Feuille, Set<Feuille>> succ();
+	
+	/**
+	 * Une copie de l'arbre
+	 * @return la copie
+	 */
+	public abstract Arbre copy();
+	
+	/**
+	 * Residuel de l'arbre par la lettre passée en argument
+	 * @param c lettre du residuel
+	 * @return le langage résiduel
+	 */
+	public abstract Arbre residuelBis(char c);
+	
+	/**
+	 * Residuel de l'arbre par la lettre passée en argument et simplification des mots vides de l'arbre
+	 * @param c lettre du residuel
+	 * @return le langage résiduel
+	 */
+	public Arbre residuel(char c){
+		Arbre a = this.residuelBis(c);
+		a.simplification();
+		return a;
+	}
+	
+	/**
+	 * Simplification des feuilles mot vide
+	 * @return l'arbre sans les mots vides
+	 */
+	public abstract Arbre simplification();
 
 	/**
 	 * Conversion d'une expression rationnelle ecrite en lecture postfixe en arbre

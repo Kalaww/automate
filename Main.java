@@ -210,8 +210,12 @@ public class Main{
 		Arbre arbre = Arbre.lirePostfixe("ab+*b.c.");
 		System.out.println(arbre.succ().toString());
 		*/
-		Automate a = new Automate(Arbre.lirePostfixe("ab.*a."));
-		System.out.println(a);
+		/*
+		Arbre a = Arbre.lirePostfixe("ab.*a.");
+		System.out.println(a+"\n"+a.premiers+"\n"+a.derniers+"\n"+a.succ());
+		Arbre b = a.copy();
+		System.out.println(b+"\n"+b.premiers+"\n"+b.derniers+"\n"+b.succ());
+		*/
 		
 		// ------ Test lecture fichier
 		//Automate aft = new Automate("af.txt");
@@ -247,6 +251,12 @@ public class Main{
 		System.out.println("Test moore\ndet : "+mooretest.estDeterministe());
 		System.out.println(mooretest.minimisation());
 		*/
+		
+		// ------ TEST RESIDUEL
+		Arbre arbre = Arbre.lirePostfixe("ab+*b.c.");
+		System.out.println(arbre);
+		Arbre r = arbre.residuel('a');
+		System.out.println("Residuel en a : "+r);
 	}
 		
 }
