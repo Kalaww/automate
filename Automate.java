@@ -69,7 +69,14 @@ public class Automate extends EnsEtat {
 		
 		residuels.remove(new Feuille(Arbre.MOT_VIDE));
 		for(Arbre a : residuels){
-			if(!map.containsKey(a)){
+			boolean test = false;
+			for(Arbre k : map.keySet()){
+				if(k.egale(a)){
+					test = true;
+					break;
+				}
+			}
+			if(!test){
 				courant = new Etat(a.estResiduelInit, a.estResiduelTerm, compteur++);
 				this.ajouteEtatSeul(courant);
 				map.put(a, courant);
@@ -452,6 +459,22 @@ public class Automate extends EnsEtat {
 				}
 			}
 		}
+		/*
+		int idCompteur = 0;
+		ArrayList<Feuilles> feuilles = arbre.getFeuilles();
+		HashMap<Feuille, Etat> map = new HashMap<Feuille, Etat>();
+		Map<Feuille, Set<Feuille>> succ = arbre.succ();
+		Etat etatCourant = null;
+		
+		for(Feuille f : feuilles){
+			etatCourant = new Etat(false, false, idCompteur++);
+			this.ajouteEtatSeul(etatCourant);
+			map.put(f, etatCourant);
+		}
+		
+		for(Feuille f : feuilles){
+			etatCourant = map.get(f);
+			for(*/
 	}
 	
 	/**

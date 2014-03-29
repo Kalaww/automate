@@ -2,6 +2,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.ArrayList;
 
 /**
  * Feuille contenant un symbole de l'expression rationelle
@@ -13,6 +14,7 @@ public class Feuille extends Arbre{
 	 * @param symbole symbole de la feuille
 	 */
 	public Feuille(char symbole){
+		this.id = Arbre.ID_COMPT++;
 		this.symbole = symbole;
 		this.contientMotVide = symbole == Arbre.MOT_VIDE;
 		this.premiers = new HashSet<Feuille>();
@@ -27,6 +29,25 @@ public class Feuille extends Arbre{
 	 */
 	public Feuille copy(){
 		return new Feuille(this.symbole);
+	}
+	
+	/**
+	 * Test si l'arbre est égale a celui passé en argument
+	 * @param a arbre à comparer
+	 * @return resultat du test
+	 */
+	public boolean egale(Arbre a){
+		return symbole == a.symbole;
+	}
+	
+	/**
+	 * Récupère toutes les feuilles de l'arbre dans une liste
+	 * @return liste contenant les feuilles
+	 */
+	public ArrayList<Feuille> getFeuilles(){
+		ArrayList<Feuille> a = new ArrayList<Feuille>();
+		if(symbole != Arbre.MOT_VIDE) a.add(this);
+		return a;
 	}
 	
 	/**
@@ -72,12 +93,12 @@ public class Feuille extends Arbre{
 			return false;
 		} else {
 			final Feuille other = (Feuille) obj;
-			return (symbole == other.symbole);
+			return (id == other.id);
 		}
 	}
 	
 	@Override
 	public int hashCode() {
-		return (int) symbole;
+		return (int) id;
 	}
 }

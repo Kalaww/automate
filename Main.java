@@ -253,10 +253,20 @@ public class Main{
 		*/
 		
 		// ------ TEST RESIDUEL
+		/*
 		Arbre arbre = Arbre.lirePostfixe("bab.*.ab.*a.+");
 		System.out.println(arbre);
 		Automate a =  new Automate(Arbre.residuels(arbre));
-		System.out.println(a);
+		System.out.println("RESIDUEL\n"+a);
+		*/
+		Arbre bb = Arbre.lirePostfixe("bab.*.ab.*a.+");
+		System.out.println("Premiers : "+bb.premiers+"\nDerniers : "+bb.derniers);
+		Automate b = new Automate(bb);
+		System.out.println("GLUSHKOV\n"+b);
+		System.out.println("Det ? "+b.estDeterministe());
+		Automate det = b.determinise();
+		System.out.println("Determiniser\n"+det);
+		System.out.println("MOORE\n"+det.minimisation());
 		/*Arbre r = arbre.residuel('a');
 		System.out.println("Residuel en a : "+r);
 		Feuille b = new Feuille('a');

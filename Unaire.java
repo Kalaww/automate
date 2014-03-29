@@ -2,6 +2,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.ArrayList;
 
 /**
  * Noeud d'une expression rationnelle pour mettre une expression rationnelle en etoile
@@ -17,6 +18,7 @@ public class Unaire extends Arbre {
 	 * Initialise le noeud unaire
 	 */
 	public Unaire(){
+		this.id = Arbre.ID_COMPT++;
 		this.symbole = '*';
 		this.fils = null;
 	}
@@ -41,6 +43,27 @@ public class Unaire extends Arbre {
 	 */
 	public Unaire copy(){
 		return new Unaire(this.fils.copy());
+	}
+	
+	/**
+	 * Test si l'arbre est égale a celui passé en argument
+	 * @param a arbre à comparer
+	 * @return resultat du test
+	 */
+	public boolean egale(Arbre a){
+		if(symbole == a.symbole){
+			Unaire k = (Unaire)a;
+			return fils.egale(k.fils);
+		}
+		return false;
+	}
+	
+	/**
+	 * Récupère toutes les feuilles de l'arbre dans une liste
+	 * @return liste contenant les feuilles
+	 */
+	public ArrayList<Feuille> getFeuilles(){
+		return fils.getFeuilles();
 	}
 	
 	/**

@@ -2,6 +2,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.ArrayList;
 
 /**
  * Noeud d'une expression rationnelle pour la concatenation ou "ou"
@@ -25,6 +26,7 @@ public class Binaire extends Arbre {
 	 * @param droit sous arbre droit
 	 */
 	public Binaire(char symbole, Arbre gauche, Arbre droit){
+		this.id = Arbre.ID_COMPT++;
 		this.symbole = symbole;
 		this.gauche = gauche;
 		this.droit = droit;
@@ -56,6 +58,30 @@ public class Binaire extends Arbre {
 	 */
 	public Binaire copy(){
 		return new Binaire(this.symbole, this.gauche.copy(), this.droit.copy());
+	}
+	
+	/**
+	 * Test si l'arbre est égale a celui passé en argument
+	 * @param a arbre à comparer
+	 * @return resultat du test
+	 */
+	public boolean egale(Arbre a){
+		if(symbole == a.symbole){
+			Binaire k = (Binaire)a;
+			return gauche.egale(k.gauche) && droit.egale(k.droit);
+		}
+		return false;
+	}
+	
+	/**
+	 * Récupère toutes les feuilles de l'arbre dans une liste
+	 * @return liste contenant les feuilles
+	 */
+	public ArrayList<Feuille> getFeuilles(){
+		ArrayList<Feuille> a = new ArrayList<Feuille>();
+		a.addAll(gauche.getFeuilles());
+		a.addAll(droit.getFeuilles());
+		return a;
 	}
 	
 	/**

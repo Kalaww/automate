@@ -1,3 +1,5 @@
+import java.util.HashSet;
+
 /**
  * Algorithme de Moore
  */
@@ -41,16 +43,41 @@ public class Moore{
 		}while(!finMoore());
 	
 		Automate minimale = new Automate();
-		for(EtatMoore etape : colonnes){
-			minimale.ajouteEtatSeul(new Etat(etape.etat.isInit(), etape.etat.isTerm(), etape.bilan));
+		HashSet<Integer> doublee = colonneDouble();
+		for(int i = 0; i < colonnes.length; i++){
+			EtatMoore etape = colonnes[i];
+			if(!doublee.contains(Integer.valueOf(i))){
+				minimale.ajouteEtatSeul(new Etat(etape.etat.isInit(), etape.etat.isTerm(), etape.bilan));
+			}
 		}
-		for(EtatMoore etape : colonnes){
-			for(int i = 0; i < alphabetIt.length; i++){
-				Etat etat = minimale.getEtat(etape.bilan);
-				etat.ajouteTransition(alphabetIt[i], minimale.getEtat(etape.transitions[i]));
+		
+		for(int k = 0; k < colonnes.length; k++){
+			EtatMoore etape = colonnes[k];
+			if(!doublee.contains(Integer.valueOf(k))){
+				for(int i = 0; i < alphabetIt.length; i++){
+					if(etape.transitions[i] != -1){
+						Etat etat = minimale.getEtat(etape.bilan);
+						etat.ajouteTransition(alphabetIt[i], minimale.getEtat(etape.transitions[i]));
+					}
+				}
 			}
 		}
 		return minimale;
+	}
+	
+	/**
+	 * Recupere les indices de colonnes après un bilan qui sont similaires à un indice inférieur
+	 * @return liste des indices similaires à un indice inférieur
+	 */
+	private static HashSet<Integer> colonneDouble(){
+		HashSet<Integer> res = new HashSet<Integer>();
+		HashSet<Integer> index = new HashSet<Integer>();
+		for(int i = 0; i < colonnes.length; i++){
+			if(!index.add(new Integer(colonnes[i].bilan))){
+				res.add(new Integer(i));
+			}
+		}
+		return res;
 	}
 	
 	/**
@@ -114,7 +141,7 @@ public class Moore{
 	 */
 	private static int rechercheValeur(Etat depart, char c){
 		EnsEtat succ = depart.succ(c);
-		if(succ.isEmpty()) return 0;
+		if(succ.isEmpty()) return -1;
 		
 		Etat suivant = succ.iterator().next();
 		EtatMoore etapeDuSuivant = null;
@@ -136,27 +163,28 @@ public class Moore{
 	private static void print(){
 		System.out.print("   ");
 		for(EtatMoore etape : colonnes){
-			System.out.print(etape.etat.hashCode()+" ");
+			System.out.print(etape.etat.hashCode()+"  ");
 		}
 		System.out.println();
 		
 		System.out.print("1  ");
 		for(EtatMoore etape : colonnes){
-			System.out.print(etape.motVide+" ");
+			System.out.print(etape.motVide+"  ");
 		}
 		System.out.println();
 		
 		for(int i = 0; i < alphabetIt.length; i++){
 			System.out.print(alphabetIt[i]+"  ");
 			for(int j = 0; j < colonnes.length; j++){
-				System.out.print(colonnes[j].transitions[i]+" ");
+				if(colonnes[j].transitions[i] == -1) System.out.print(colonnes[j].transitions[i]+" ");
+				else System.out.print(colonnes[j].transitions[i]+"  ");
 			}
 			System.out.println();
 		}
 		
 		System.out.print("=> ");
 		for(EtatMoore etape : colonnes){
-			System.out.print(etape.bilan+" ");
+			System.out.print(etape.bilan+"  ");
 		}
 		System.out.println("\n");
 	}
