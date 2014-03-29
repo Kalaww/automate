@@ -253,9 +253,10 @@ public class Main{
 		*/
 		
 		// ------ TEST RESIDUEL
-		Arbre arbre = Arbre.lirePostfixe("ab.*a.");
+		Arbre arbre = Arbre.lirePostfixe("bab.*.ab.*a.+");
 		System.out.println(arbre);
-		Arbre.residuels(arbre);
+		Automate a =  new Automate(Arbre.residuels(arbre));
+		System.out.println(a);
 		/*Arbre r = arbre.residuel('a');
 		System.out.println("Residuel en a : "+r);
 		Feuille b = new Feuille('a');

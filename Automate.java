@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 import java.util.Set;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 import java.io.PrintStream;
 import java.io.FileNotFoundException;
@@ -54,6 +55,34 @@ public class Automate extends EnsEtat {
     	this();
     	this.readFile(fichier);
     }
+    
+    /**
+     * Automate à partir du calcul des résiduels d'une expressions rationnelle.
+     * L'automate est donc minimal
+     * @param residuels liste des arbres des résiduels
+     */
+    public Automate(ArrayList<Arbre> residuels){
+		this();
+		HashMap<Arbre, Etat> map = new HashMap<Arbre, Etat>();
+		Etat courant = null;
+		int compteur = 0;
+		
+		residuels.remove(new Feuille(Arbre.MOT_VIDE));
+		for(Arbre a : residuels){
+			if(!map.containsKey(a)){
+				courant = new Etat(a.estResiduelInit, a.estResiduelTerm, compteur++);
+				this.ajouteEtatSeul(courant);
+				map.put(a, courant);
+			}
+		}
+		
+		for(Arbre a : residuels){
+			courant = map.get(a);
+			for(Map.Entry<Character, Arbre> entre : a.residuels.entrySet()){
+				courant.ajouteTransition(entre.getKey().charValue(), map.get(entre.getValue()));
+			}
+		}
+	}
 
 	/**
 	 * Ajoute l'etat a l'automate

@@ -50,7 +50,7 @@ public class Unaire extends Arbre {
 	 */
 	public Arbre residuelBis(char c){
 		if(premiers.contains(new Feuille(c))) return new Binaire(Arbre.SYMBOLE_CONCAT, fils.residuelBis(c), this.copy());
-		return this.copy();
+		return new Feuille(Arbre.MOT_VIDE);
 	}
 	
 	/**

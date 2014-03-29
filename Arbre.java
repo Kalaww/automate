@@ -3,6 +3,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.ArrayList;
 
 /**
  * Base de chaque noeud d'un arbre d'une expression rationnelle
@@ -43,6 +44,21 @@ public abstract class Arbre {
 	 * Derniers symboles du sous arbre du noeud
 	 */
 	public Set<Feuille> derniers;
+	
+	/**
+	 * Mappage des résiduels
+	 */
+	public HashMap<Character, Arbre> residuels;
+	
+	/**
+	 * Vrai si cet arbre est initiale comme résiduel
+	 */
+	public boolean estResiduelInit = false;
+	
+	/**
+	 * Vrai si cet arbre est acceptant comme résiduel
+	 */
+	public boolean estResiduelTerm = false;
 
 	/**
 	 * Successeurs (transition) du sous arbre du noeud
@@ -70,7 +86,13 @@ public abstract class Arbre {
 	 */
 	public Arbre residuel(char c){
 		Arbre a = this.residuelBis(c);
+		boolean b = false;
+		if(a.symbole == '+'){
+			Binaire tmp = (Binaire) a;
+			b = tmp.droit.equals(new Feuille(Arbre.MOT_VIDE)) || tmp.gauche.equals(new Feuille(Arbre.MOT_VIDE));
+		}
 		a = a.simplification();
+		a.estResiduelTerm = b;
 		return a;
 	}
 	
@@ -115,31 +137,30 @@ public abstract class Arbre {
 	}
 	
 	/**
-	 * Stocke tous les résiduels de l'arbre en argument dans un HashMap
+	 * Stocke tous les résiduels de l'arbre en argument dans une liste
 	 * @param a arbre dont il faut les résisduels
-	 * @return HashMap des résiduels
+	 * @return liste des résiduels
 	 */
-	public static HashMap<Arbre, HashMap<Character, Arbre>> residuels(Arbre a){
-		HashMap<Character, Arbre> succ = null;
-		HashMap<Arbre, HashMap<Character, Arbre>> all = new HashMap<Arbre, HashMap<Character, Arbre>>();
+	public static ArrayList<Arbre> residuels(Arbre a){
+		ArrayList<Arbre> all = new ArrayList<Arbre>();
 		Stack<Arbre> pile = new Stack<Arbre>();
 		Set<Character> alphabet = a.alphabet();
 		
 		pile.push(a);
+		a.estResiduelInit = true;
 		
 		while(!pile.empty()){
 			Arbre depile = pile.pop();
-			succ = new HashMap<Character, Arbre>();
+			depile.residuels = new HashMap<Character, Arbre>();
 			for(Character c : alphabet){
 				Arbre res = depile.residuel(c.charValue());
-				succ.put(c, res);
-				if(!all.keySet().contains(res)) pile.push(res);
+				if(!res.equals(new Feuille(Arbre.MOT_VIDE))){
+					depile.residuels.put(c, res);
+					if(!all.contains(res)) pile.push(res);
+				}
 			}
-			all.put(depile, succ);
-			System.out.println("---PILE---\n"+pile);
-			System.out.println("---MAP---\n"+all+"\n\n");
+			all.add(depile);
 		}
-		System.out.println(all);
 		return all;
 	}
 }
