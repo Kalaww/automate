@@ -46,6 +46,16 @@ public class Feuille extends Arbre{
 	public Arbre simplification(){
 		return this;
 	}
+	
+	/**
+	 * Recupère un ensemble de l'alphabet de l'arbre
+	 * @return ensemble des lettres
+	 */
+	public Set<Character> alphabet(){
+		Set<Character> a = new HashSet<Character>();
+		if(symbole != Arbre.MOT_VIDE) a.add(symbole);
+		return a;
+	}
 
 	public Map<Feuille, Set<Feuille>> succ(){
 		return new HashMap<Feuille, Set<Feuille>>();
@@ -54,5 +64,20 @@ public class Feuille extends Arbre{
 	@Override
 	public String toString(){
 		return ""+symbole;
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		} else {
+			final Feuille other = (Feuille) obj;
+			return (symbole == other.symbole);
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		return (int) symbole;
 	}
 }

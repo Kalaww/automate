@@ -64,6 +64,7 @@ public class Binaire extends Arbre {
 	 * @return le langage résiduel
 	 */
 	public Arbre residuelBis(char c){
+		if(!premiers.contains(new Feuille(c))) return new Feuille(Arbre.MOT_VIDE);
 		if(this.symbole == Arbre.SYMBOLE_CONCAT){
 			if(gauche.contientMotVide) return new Binaire(Arbre.SYMBOLE_OU, new Binaire(Arbre.SYMBOLE_CONCAT, gauche.residuelBis(c), droit.copy()), droit.residuelBis(c));
 			return new Binaire(Arbre.SYMBOLE_CONCAT, gauche.residuelBis(c), droit.copy());
@@ -85,6 +86,16 @@ public class Binaire extends Arbre {
 		return this;
 	}
 	
+	/**
+	 * Recupère un ensemble de l'alphabet de l'arbre
+	 * @return ensemble des lettres
+	 */
+	public Set<Character> alphabet(){
+		Set<Character> a = new HashSet<Character>();
+		a.addAll(gauche.alphabet());
+		a.addAll(droit.alphabet());
+		return a;
+	}
 	
 	public Map<Feuille, Set<Feuille>> succ(){
 		HashMap<Feuille, Set<Feuille>> map = new HashMap<Feuille, Set<Feuille>>();
@@ -111,5 +122,24 @@ public class Binaire extends Arbre {
 	public String toString(){
 		if(symbole == Arbre.SYMBOLE_CONCAT) return "["+gauche.toString()+symbole+droit.toString()+"]";
 		else return "("+gauche.toString()+symbole+droit.toString()+")";
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		} else {
+			final Binaire other = (Binaire) obj;
+			return (symbole == other.symbole) && gauche.equals(other.gauche) && droit.equals(other.droit);
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		if(symbole == Arbre.SYMBOLE_CONCAT){
+			return (int) (gauche.hashCode() * droit.hashCode());
+		}else{
+			return (int) (gauche.hashCode() + droit.hashCode());
+		}
 	}
 }

@@ -70,7 +70,7 @@ public abstract class Arbre {
 	 */
 	public Arbre residuel(char c){
 		Arbre a = this.residuelBis(c);
-		a.simplification();
+		a = a.simplification();
 		return a;
 	}
 	
@@ -79,6 +79,12 @@ public abstract class Arbre {
 	 * @return l'arbre sans les mots vides
 	 */
 	public abstract Arbre simplification();
+	
+	/**
+	 * Recupère un ensemble de l'alphabet de l'arbre
+	 * @return ensemble des lettres
+	 */
+	public abstract Set<Character> alphabet();
 
 	/**
 	 * Conversion d'une expression rationnelle ecrite en lecture postfixe en arbre
@@ -106,5 +112,34 @@ public abstract class Arbre {
 		}
 
 		return pile.pop();
+	}
+	
+	/**
+	 * Stocke tous les résiduels de l'arbre en argument dans un HashMap
+	 * @param a arbre dont il faut les résisduels
+	 * @return HashMap des résiduels
+	 */
+	public static HashMap<Arbre, HashMap<Character, Arbre>> residuels(Arbre a){
+		HashMap<Character, Arbre> succ = null;
+		HashMap<Arbre, HashMap<Character, Arbre>> all = new HashMap<Arbre, HashMap<Character, Arbre>>();
+		Stack<Arbre> pile = new Stack<Arbre>();
+		Set<Character> alphabet = a.alphabet();
+		
+		pile.push(a);
+		
+		while(!pile.empty()){
+			Arbre depile = pile.pop();
+			succ = new HashMap<Character, Arbre>();
+			for(Character c : alphabet){
+				Arbre res = depile.residuel(c.charValue());
+				succ.put(c, res);
+				if(!all.keySet().contains(res)) pile.push(res);
+			}
+			all.put(depile, succ);
+			System.out.println("---PILE---\n"+pile);
+			System.out.println("---MAP---\n"+all+"\n\n");
+		}
+		System.out.println(all);
+		return all;
 	}
 }

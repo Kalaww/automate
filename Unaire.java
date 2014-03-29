@@ -49,7 +49,8 @@ public class Unaire extends Arbre {
 	 * @return le langage résiduel
 	 */
 	public Arbre residuelBis(char c){
-		return new Binaire(Arbre.SYMBOLE_CONCAT, fils.residuelBis(c), this.copy());
+		if(premiers.contains(new Feuille(c))) return new Binaire(Arbre.SYMBOLE_CONCAT, fils.residuelBis(c), this.copy());
+		return this.copy();
 	}
 	
 	/**
@@ -60,6 +61,14 @@ public class Unaire extends Arbre {
 		fils = fils.simplification();
 		if(fils.symbole == Arbre.MOT_VIDE) return new Feuille(Arbre.MOT_VIDE);
 		return this;
+	}
+	
+	/**
+	 * Recupère un ensemble de l'alphabet de l'arbre
+	 * @return ensemble des lettres
+	 */
+	public Set<Character> alphabet(){
+		return fils.alphabet();
 	}
 	
 	public Map<Feuille, Set<Feuille>> succ(){
@@ -82,5 +91,20 @@ public class Unaire extends Arbre {
 	@Override
 	public String toString(){
 		return "{"+fils.toString()+"}"+symbole;
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		} else {
+			final Unaire other = (Unaire) obj;
+			return (symbole == other.symbole) && fils.equals(other.fils);
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		return (int) fils.hashCode();
 	}
 }
