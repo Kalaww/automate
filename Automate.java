@@ -459,22 +459,6 @@ public class Automate extends EnsEtat {
 				}
 			}
 		}
-		/*
-		int idCompteur = 0;
-		ArrayList<Feuilles> feuilles = arbre.getFeuilles();
-		HashMap<Feuille, Etat> map = new HashMap<Feuille, Etat>();
-		Map<Feuille, Set<Feuille>> succ = arbre.succ();
-		Etat etatCourant = null;
-		
-		for(Feuille f : feuilles){
-			etatCourant = new Etat(false, false, idCompteur++);
-			this.ajouteEtatSeul(etatCourant);
-			map.put(f, etatCourant);
-		}
-		
-		for(Feuille f : feuilles){
-			etatCourant = map.get(f);
-			for(*/
 	}
 	
 	/**

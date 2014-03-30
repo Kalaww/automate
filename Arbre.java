@@ -90,12 +90,6 @@ public abstract class Arbre {
 	public abstract boolean egale(Arbre a);
 	
 	/**
-	 * Récupère toutes les feuilles de l'arbre dans une liste
-	 * @return liste contenant les feuilles
-	 */
-	public abstract ArrayList<Feuille> getFeuilles();
-	
-	/**
 	 * Residuel de l'arbre par la lettre passée en argument
 	 * @param c lettre du residuel
 	 * @return le langage résiduel
@@ -130,15 +124,6 @@ public abstract class Arbre {
 	 * @return ensemble des lettres
 	 */
 	public abstract Set<Character> alphabet();
-	
-	/*
-	public static ArrayList<Feuille> getSuccesseur(Arbre a, Feuille f){
-		ArrayList<Feuille> res = new ArrayList<Feuille>();
-		ArrayList<Feuille> feuilles = a.getFeuilles();
-		
-		for(Feuille courant : feuilles){
-			
-	}*/
 
 	/**
 	 * Conversion d'une expression rationnelle ecrite en lecture postfixe en arbre

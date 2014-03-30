@@ -74,17 +74,6 @@ public class Binaire extends Arbre {
 	}
 	
 	/**
-	 * Récupère toutes les feuilles de l'arbre dans une liste
-	 * @return liste contenant les feuilles
-	 */
-	public ArrayList<Feuille> getFeuilles(){
-		ArrayList<Feuille> a = new ArrayList<Feuille>();
-		a.addAll(gauche.getFeuilles());
-		a.addAll(droit.getFeuilles());
-		return a;
-	}
-	
-	/**
 	 * Residuel du noeud Binaire par la lettre passée en argument
 	 * @param c lettre du residuel
 	 * @return le langage résiduel

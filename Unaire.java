@@ -59,14 +59,6 @@ public class Unaire extends Arbre {
 	}
 	
 	/**
-	 * Récupère toutes les feuilles de l'arbre dans une liste
-	 * @return liste contenant les feuilles
-	 */
-	public ArrayList<Feuille> getFeuilles(){
-		return fils.getFeuilles();
-	}
-	
-	/**
 	 * Residuel du noeud Unaire par la lettre passée en argument
 	 * @param c lettre du residuel
 	 * @return le langage résiduel
