@@ -47,7 +47,7 @@ public class Feuille extends Arbre{
 	 */
 	public Arbre residuelBis(char c){
 		if(symbole == c) return new Feuille(Arbre.MOT_VIDE);
-		else return this.copy();
+		else return null;
 	}
 	
 	/**

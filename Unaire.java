@@ -64,8 +64,20 @@ public class Unaire extends Arbre {
 	 * @return le langage résiduel
 	 */
 	public Arbre residuelBis(char c){
-		if(premiers.contains(new Feuille(c))) return new Binaire(Arbre.SYMBOLE_CONCAT, fils.residuelBis(c), this.copy());
-		return new Feuille(Arbre.MOT_VIDE);
+		boolean test = false;
+		for(Arbre k : premiers){
+			if(k.egale(new Feuille(c))){
+				test = true;
+				break;
+			}
+		}
+		if(test) {
+			Arbre f = fils.residuelBis(c);
+			Arbre ff = this.copy();
+			if(f == null) return null;
+			return new Binaire(Arbre.SYMBOLE_CONCAT, f, ff);
+		}
+		return null;
 	}
 	
 	/**

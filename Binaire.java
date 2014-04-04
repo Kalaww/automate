@@ -79,12 +79,30 @@ public class Binaire extends Arbre {
 	 * @return le langage résiduel
 	 */
 	public Arbre residuelBis(char c){
-		if(!premiers.contains(new Feuille(c))) return new Feuille(Arbre.MOT_VIDE);
+		Arbre g, d;
 		if(this.symbole == Arbre.SYMBOLE_CONCAT){
-			if(gauche.contientMotVide) return new Binaire(Arbre.SYMBOLE_OU, new Binaire(Arbre.SYMBOLE_CONCAT, gauche.residuelBis(c), droit.copy()), droit.residuelBis(c));
-			return new Binaire(Arbre.SYMBOLE_CONCAT, gauche.residuelBis(c), droit.copy());
+			if(gauche.contientMotVide){
+				g = gauche.residuelBis(c);
+				d = droit.copy();
+				if(g == null || d == null) g = null;
+				else g = new Binaire(Arbre.SYMBOLE_CONCAT, g, d);
+				d = droit.residuelBis(c);
+				if(g == null && d == null) return null;
+				if(g == null) return d;
+				if(d == null) return g;
+				return new Binaire(Arbre.SYMBOLE_OU, g, d);
+			}
+			g = gauche.residuelBis(c);
+			d = droit.copy();
+			if(g == null || d == null) return null;
+			return new Binaire(Arbre.SYMBOLE_CONCAT, g, d);
 		}else{
-			return new Binaire(Arbre.SYMBOLE_OU, gauche.residuelBis(c), droit.residuelBis(c));
+			g = gauche.residuelBis(c);
+			d = droit.residuelBis(c);
+			if(g == null && d == null) return null;
+			if(g == null) return d;
+			if(d == null) return g;
+			return new Binaire(Arbre.SYMBOLE_OU, g, d);
 		}
 	}
 	

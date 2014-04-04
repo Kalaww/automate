@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Main{
 	public static void main(String[] args){
 		// ------ Exemple 1
@@ -259,19 +261,87 @@ public class Main{
 		Automate a =  new Automate(Arbre.residuels(arbre));
 		System.out.println("RESIDUEL\n"+a);
 		*/
+		
 		Arbre bb = Arbre.lirePostfixe("bab.*.ab.*a.+");
 		System.out.println("Premiers : "+bb.premiers+"\nDerniers : "+bb.derniers);
-		Automate b = new Automate(bb);
+		System.out.println(bb);
+		/*Automate b = new Automate(bb);
 		System.out.println("GLUSHKOV\n"+b);
 		System.out.println("Det ? "+b.estDeterministe());
 		Automate det = b.determinise();
 		System.out.println("Determiniser\n"+det);
-		System.out.println("MOORE\n"+det.minimisation());
+		System.out.println("MOORE\n"+det.minimisation());*/
+		Automate res = new Automate(Arbre.residuels(bb));
+		System.out.println(res);
+		/*System.out.println("A: "+bb.residuel('a'));
+		Arbre bbb = bb.residuel('b');
+		Arbre bbba = bbb.residuel('a');
+		Arbre bbbb = bbb.residuel('b');
+		System.out.println("B: "+bbb+" T:"+bbb.estResiduelTerm);
+		System.out.println("-A: "+bbba+" T:"+bbba.estResiduelTerm);
+		System.out.println("-B: "+bbbb+" T:"+bbbb.estResiduelTerm);*/
+		
+		
 		/*Arbre r = arbre.residuel('a');
 		System.out.println("Residuel en a : "+r);
 		Feuille b = new Feuille('a');
 		Feuille c = new Feuille('a');
 		System.out.println("test : "+b.equals(c));*/
+		//commande(args);
 	}
+	
+	
+	/*public static void commande(String[] args){
+		boolean glushkov = false;
+		boolean moore = false;
+		boolean residuel = false;
+		boolean comparer = false
 		
+		
+		for(int i = 0; i < args.length; i++){
+			switch(args[i].charAt(0)){
+				case '-':
+					if(args[i].length() < 2)
+						throw new IllegalArgumentException("Argument non valide: "+args[i]);
+					else{
+						if(args.length-1 == i || args[i+1])
+							throw new IllegalArgumentException("Argument non valide: "+args[i]);
+						optList.add(new Option(args[i], args[i+1]));
+						i++;
+					}
+					break;
+				default:
+					argList.add(args[i]);
+					break;
+				}
+		}
+		
+		System.out.println("ARG\n"+argList);
+		System.out.println("OPT\n"+optList);
+	}*/
 }
+
+/*private class Option{
+	String flag;
+	String opt;
+	
+	public Option(String flag, String opt){
+		this.flag = flag;
+		this.opt = opt;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		} else {
+			final Option other = (Option) obj;
+			return (flag.equals(other.flag));
+		}
+	}
+	
+	@Override
+	public String toString(){
+		return "["+flag+"] = "+opt;
+	}
+}*/

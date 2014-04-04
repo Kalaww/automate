@@ -102,14 +102,27 @@ public abstract class Arbre {
 	 * @return le langage résiduel
 	 */
 	public Arbre residuel(char c){
-		Arbre a = this.residuelBis(c);
-		boolean b = false;
-		if(a.symbole == '+'){
-			Binaire tmp = (Binaire) a;
-			b = tmp.droit.symbole == Arbre.MOT_VIDE || tmp.gauche.symbole == Arbre.MOT_VIDE;
+		boolean test = false;
+		for(Arbre k : premiers){
+			if(k.egale(new Feuille(c))){
+				test = true;
+				break;
+			}
 		}
-		a = a.simplification();
-		a.estResiduelTerm = b;
+		if(!test) return null;
+		Arbre a = this.residuelBis(c);
+		if(a!=null){
+			boolean b = false;
+			if(a.symbole == '+'){
+				Binaire tmp = (Binaire) a;
+				b = tmp.droit.symbole == Arbre.MOT_VIDE || tmp.gauche.symbole == Arbre.MOT_VIDE;
+			}else if(a.symbole == '*' || a.symbole == Arbre.MOT_VIDE){
+				b = true;
+			}
+			a = a.simplification();
+			if(a.symbole == '*') b = true;
+			a.estResiduelTerm = b;
+		}
 		return a;
 	}
 	
@@ -164,6 +177,7 @@ public abstract class Arbre {
 		Set<Character> alphabet = a.alphabet();
 		
 		pile.push(a);
+		all.add(a);
 		a.estResiduelInit = true;
 		
 		while(!pile.empty()){
@@ -171,19 +185,21 @@ public abstract class Arbre {
 			depile.residuels = new HashMap<Character, Arbre>();
 			for(Character c : alphabet){
 				Arbre res = depile.residuel(c.charValue());
-				if(res.symbole != Arbre.MOT_VIDE){
-					depile.residuels.put(c, res);
+				depile.residuels.put(c, res);
+				if(res != null){
 					boolean test = false;
 					for(Arbre k : all){
-						if(k.egale(res)){
+						if(k.egale(res) && k.estResiduelTerm == res.estResiduelTerm){
 							test = true;
 							break;
 						}
 					}
-					if(!test) pile.push(res);
+					if(!test){
+						pile.push(res);
+						all.add(res);
+					}
 				}
 			}
-			all.add(depile);
 		}
 		return all;
 	}

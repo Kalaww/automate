@@ -67,11 +67,10 @@ public class Automate extends EnsEtat {
 		Etat courant = null;
 		int compteur = 0;
 		
-		residuels.remove(new Feuille(Arbre.MOT_VIDE));
 		for(Arbre a : residuels){
 			boolean test = false;
 			for(Arbre k : map.keySet()){
-				if(k.egale(a)){
+				if(k.egale(a) && k.estResiduelTerm == a.estResiduelTerm){
 					test = true;
 					break;
 				}
@@ -86,7 +85,14 @@ public class Automate extends EnsEtat {
 		for(Arbre a : residuels){
 			courant = map.get(a);
 			for(Map.Entry<Character, Arbre> entre : a.residuels.entrySet()){
-				courant.ajouteTransition(entre.getKey().charValue(), map.get(entre.getValue()));
+				if(entre.getValue() != null){
+					for(Map.Entry<Arbre,Etat> succ: map.entrySet()){
+						if(entre.getValue().egale(succ.getKey()) && entre.getValue().estResiduelTerm == succ.getKey().estResiduelTerm){
+							courant.ajouteTransition(entre.getKey().charValue(), succ.getValue());
+							break;
+						}
+					}
+				}
 			}
 		}
 	}
