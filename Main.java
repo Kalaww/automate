@@ -1,6 +1,14 @@
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.HashSet;
+import java.io.File;
 
 public class Main{
+	
+	private enum Cas{
+		None, Aut, Exp, AutAut, AutExp, ExpAut, ExpExp
+	};
+	
 	public static void main(String[] args){
 		// ------ Exemple 1
 		/*
@@ -262,17 +270,17 @@ public class Main{
 		System.out.println("RESIDUEL\n"+a);
 		*/
 		
-		Arbre bb = Arbre.lirePostfixe("bab.*.ab.*a.+");
+		/*Arbre bb = Arbre.lirePostfixe("bab.*.ab.*a.+");
 		System.out.println("Premiers : "+bb.premiers+"\nDerniers : "+bb.derniers);
-		System.out.println(bb);
+		System.out.println(bb);*/
 		/*Automate b = new Automate(bb);
 		System.out.println("GLUSHKOV\n"+b);
 		System.out.println("Det ? "+b.estDeterministe());
 		Automate det = b.determinise();
 		System.out.println("Determiniser\n"+det);
 		System.out.println("MOORE\n"+det.minimisation());*/
-		Automate res = new Automate(Arbre.residuels(bb));
-		System.out.println(res);
+		//Automate res = new Automate(Arbre.residuels(bb));
+		//System.out.println(res);
 		/*System.out.println("A: "+bb.residuel('a'));
 		Arbre bbb = bb.residuel('b');
 		Arbre bbba = bbb.residuel('a');
@@ -287,61 +295,130 @@ public class Main{
 		Feuille b = new Feuille('a');
 		Feuille c = new Feuille('a');
 		System.out.println("test : "+b.equals(c));*/
-		//commande(args);
+		
+		
+		param(args);
 	}
 	
-	
-	/*public static void commande(String[] args){
-		boolean glushkov = false;
-		boolean moore = false;
-		boolean residuel = false;
-		boolean comparer = false
+	public static void param(String args[]){
+		String fichierLecture = null;
+		String fichierLecture2 = null;
+		String fichierEcriture = null;
+		int nombreAlea = -1;
+		String alphabetAlea = null;
+		boolean comparer = false;
 		
+		Cas cas = Cas.None;
+		
+		Automate automateDepart = null;
+		Automate automateDepart2 = null;
+		Arbre arbreDepart = null;
+		Arbre arbreDepart2 = null;
 		
 		for(int i = 0; i < args.length; i++){
-			switch(args[i].charAt(0)){
-				case '-':
-					if(args[i].length() < 2)
-						throw new IllegalArgumentException("Argument non valide: "+args[i]);
-					else{
-						if(args.length-1 == i || args[i+1])
-							throw new IllegalArgumentException("Argument non valide: "+args[i]);
-						optList.add(new Option(args[i], args[i+1]));
-						i++;
-					}
-					break;
-				default:
-					argList.add(args[i]);
-					break;
+			String mot = args[i];
+			if(mot.equals("-f")){
+				if(i+1 >= args.length){
+					throw new IllegalArgumentException("Pas de fichier après -f");
+				}else{
+					fichierLecture = args[i+1];
 				}
+				i++;
+			}else if(mot.equals("-f2")){
+				if(i+1 >= args.length){
+					throw new IllegalArgumentException("Pas de fichier après -f2");
+				}else{
+					fichierLecture2 = args[i+1];
+				}
+				i++;
+			}else if(mot.equals("-g")){
+				if(i+2 >= args.length){
+					throw new IllegalArgumentException("Manque deux arguments après -g");
+				}else{
+					nombreAlea = Integer.parseInt(args[i+1]);
+					alphabetAlea = args[i+2];
+				}
+				i+=2;
+			}else if(mot.equals("-w")){
+				if(i+1 >= args.length){
+					throw new IllegalArgumentException("Pas de fichier après -w");
+				}else{
+					fichierEcriture = args[i+1];
+				}
+				i++;
+			}else if(mot.equals("-c")){
+				comparer = true;
+			}else{
+				throw new IllegalArgumentException("Argument inconnu : "+mot);
+			}
 		}
 		
-		System.out.println("ARG\n"+argList);
-		System.out.println("OPT\n"+optList);
-	}*/
-}
-
-/*private class Option{
-	String flag;
-	String opt;
-	
-	public Option(String flag, String opt){
-		this.flag = flag;
-		this.opt = opt;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || getClass() != obj.getClass()) {
-			return false;
-		} else {
-			final Option other = (Option) obj;
-			return (flag.equals(other.flag));
+		//FICHIER 1
+		if(fichierLecture != null && (nombreAlea > -1 || alphabetAlea != null)){
+			throw new IllegalArgumentException("Lecture de fichier et génération aléatoire d'automate dans la même commande impossible");
+		}else if(fichierLecture != null){
+			String tmp = fichierContientExpRat(fichierLecture);
+			if(tmp != null){
+				arbreDepart = Arbre.lirePostfixe(tmp);
+			}else{
+				automateDepart = new Automate(fichierLecture);
+			}
+		}else if(nombreAlea > -1 && alphabetAlea != null){
+			HashSet<Character> alphabet = new HashSet<Character>();
+			for(int i = 0; i < alphabetAlea.length(); i++)
+				alphabet.add(alphabetAlea.charAt(i));
+			//automateDepart = Automate(nombreAlea, alphabet);
+		}else{
+			throw new IllegalArgumentException("Aucun argument pour la génération d'un automate");
+		}
+		
+		//FICHIER 2
+		if(fichierLecture2 != null){
+			String tmp = fichierContientExpRat(fichierLecture2);
+			if(tmp != null){
+				arbreDepart2 = Arbre.lirePostfixe(tmp);
+			}else{
+				automateDepart2 = new Automate(fichierLecture2);
+			}
+		}
+		
+		//Gesiton du cas des fichiers de lectures
+		if(fichierLecture2 == null){
+			if(automateDepart != null) cas = Cas.Aut;
+			else if(arbreDepart != null) cas = Cas.Exp;
+		}else{
+			if(automateDepart != null && automateDepart2 != null) cas = Cas.AutAut;
+			else if(automateDepart != null && arbreDepart2 != null) cas = Cas.AutExp;
+			else if(arbreDepart != null && automateDepart2 != null) cas = Cas.ExpAut;
+			else if(arbreDepart != null && arbreDepart2 != null) cas = Cas.ExpExp;
+		}
+		System.out.println("CAS : "+cas);
+			
+		
+		//COMPARAISON
+		if(comparer){
+			if(cas.equals(Cas.Aut)){
+				Automate minimalMoore = automateDepart.minimisation();
+			}else if(cas.equals(Cas.Exp)){
+				Automate minimalMoore = new Automate(arbreDepart).minimisation();
+				Automate minimalResiduel = new Automate(Arbre.residuels(arbreDepart.copy()));
+				System.out.println("---MOORE---\n"+minimalMoore);
+				System.out.println("---RESIDUEL---\n"+minimalResiduel);
+			}
+				
+			
 		}
 	}
 	
-	@Override
-	public String toString(){
-		return "["+flag+"] = "+opt;
+	public static String fichierContientExpRat(String fichier){
+		try{
+			Scanner sc = new Scanner(new File(fichier));
+			String ligne = sc.nextLine();
+			if(ligne != null && sc.hasNextLine()) return null;
+			else return ligne;
+		}catch (Exception e){
+			e.printStackTrace();
+			return null;
+		}
 	}
-}*/
+}
