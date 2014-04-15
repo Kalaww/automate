@@ -9,6 +9,9 @@ public class Main{
 		None, Aut, Exp, AutAut, AutExp, ExpAut, ExpExp
 	};
 	
+	public static boolean INFO = false;
+	public static boolean DG = true;
+	
 	public static void main(String[] args){
 		// ------ Exemple 1
 		/*
@@ -296,8 +299,15 @@ public class Main{
 		Feuille c = new Feuille('a');
 		System.out.println("test : "+b.equals(c));*/
 		
-		
+		/*HashSet<Character> al = new HashSet<Character>();
+		al.add('a');
+		al.add('b');
+		Automate a = new Automate(6, al);
+		System.out.println(a);
+		System.out.println("DETERMINISE\n"+a.determinise());
+		System.out.println("MINIMISER\n"+a.minimisation());*/
 		param(args);
+
 	}
 	
 	public static void param(String args[]){
@@ -348,6 +358,8 @@ public class Main{
 				i++;
 			}else if(mot.equals("-c")){
 				comparer = true;
+			}else if(mot.equals("-i")){
+				Main.INFO = true;
 			}else{
 				throw new IllegalArgumentException("Argument inconnu : "+mot);
 			}
@@ -367,7 +379,7 @@ public class Main{
 			HashSet<Character> alphabet = new HashSet<Character>();
 			for(int i = 0; i < alphabetAlea.length(); i++)
 				alphabet.add(alphabetAlea.charAt(i));
-			//automateDepart = Automate(nombreAlea, alphabet);
+			automateDepart = new Automate(nombreAlea, alphabet);
 		}else{
 			throw new IllegalArgumentException("Aucun argument pour la génération d'un automate");
 		}
@@ -382,7 +394,7 @@ public class Main{
 			}
 		}
 		
-		//Gesiton du cas des fichiers de lectures
+		//Gestion du cas des fichiers de lectures
 		if(fichierLecture2 == null){
 			if(automateDepart != null) cas = Cas.Aut;
 			else if(arbreDepart != null) cas = Cas.Exp;
@@ -392,22 +404,45 @@ public class Main{
 			else if(arbreDepart != null && automateDepart2 != null) cas = Cas.ExpAut;
 			else if(arbreDepart != null && arbreDepart2 != null) cas = Cas.ExpExp;
 		}
-		System.out.println("CAS : "+cas);
+		if(Main.DG) System.out.println("CAS : "+cas);
 			
 		
 		//COMPARAISON
 		if(comparer){
-			if(cas.equals(Cas.Aut)){
-				Automate minimalMoore = automateDepart.minimisation();
-			}else if(cas.equals(Cas.Exp)){
+			if(cas.equals(Cas.Exp)){
 				Automate minimalMoore = new Automate(arbreDepart).minimisation();
+				System.out.println("--- MINIMISATION MOORE ---\n"+minimalMoore);
 				Automate minimalResiduel = new Automate(Arbre.residuels(arbreDepart.copy()));
-				System.out.println("---MOORE---\n"+minimalMoore);
-				System.out.println("---RESIDUEL---\n"+minimalResiduel);
+				System.out.println("--- MINIMISATION RESIDUEL ---\n"+minimalResiduel);
 				System.out.println("Egaux : "+minimalMoore.estEgale(minimalResiduel));
+			}else if(cas.equals(Cas.AutAut)){
+				Automate minimalMoore1 = automateDepart.minimisation();
+				System.out.println("--- MINIMISATION MOORE 1 ---\n"+minimalMoore1);
+				Automate minimalMoore2 = automateDepart2.minimisation();
+				System.out.println("--- MINIMISATION MOORE 2 ---\n"+minimalMoore2);
+				System.out.println("Egaux : "+minimalMoore1.estEgale(minimalMoore2));
+			}else if(cas.equals(Cas.AutExp)){
+				Automate minimalMoore1 = automateDepart.minimisation();
+				System.out.println("--- MINIMISATION MOORE ---\n"+minimalMoore1);
+				Automate minimalRes = new Automate(Arbre.residuels(arbreDepart2));
+				System.out.println("--- MINIMISATION RESIDUEL ---\n"+minimalRes);
+				System.out.println("Egaux : "+minimalMoore1.estEgale(minimalRes));
+			}else if(cas.equals(Cas.ExpAut)){
+				Automate minimalRes = new Automate(Arbre.residuels(arbreDepart));
+				System.out.println("--- MINIMISATION RESIDUEL ---\n"+minimalRes);
+				Automate minimalMoore = automateDepart2.minimisation();
+				System.out.println("--- MINIMISATION MOORE ---\n"+minimalMoore);
+				System.out.println("Egaux : "+minimalMoore.estEgale(minimalRes));
+			}else if(cas.equals(Cas.ExpExp)){
+				Automate minimalRes1 = new Automate(Arbre.residuels(arbreDepart));
+				System.out.println("--- MINIMISATION RESIDUEL 1 ---\n"+minimalRes1);
+				Automate minimalRes2 = new Automate(Arbre.residuels(arbreDepart2));
+				System.out.println("--- MINIMISATION RESIDUEL 2 ---\n"+minimalRes2);
+				System.out.println("Egaux : "+minimalRes1.estEgale(minimalRes2));
+			}else{
+				System.out.println("Les paramètres donnés ne permettrent pas de réaliser une comparaison");
+				return;
 			}
-				
-			
 		}
 	}
 	

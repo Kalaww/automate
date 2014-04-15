@@ -28,6 +28,7 @@ public class Moore{
 		for(Character c : af.alphabet()) alphabetIt[compteur++] = c.charValue();
 		compteur = 0;
 		for(Etat e : af) colonnes[compteur++] = new EtatMoore(e, alphabetIt.length);
+		if(Main.INFO) System.out.println("--- ETAPES MOORE ---");
 		
 		do{
 			if(premierAppel) premierAppel = false;
@@ -39,7 +40,7 @@ public class Moore{
 				}
 			}
 			bilan();
-			print();
+			if(Main.INFO) print();
 		}while(!finMoore());
 	
 		Automate minimale = new Automate();

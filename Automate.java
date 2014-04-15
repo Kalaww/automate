@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.Random;
 import java.io.PrintStream;
 import java.io.FileNotFoundException;
 import java.io.File;
@@ -55,6 +56,26 @@ public class Automate extends EnsEtat {
     	this();
     	this.readFile(fichier);
     }
+    
+    public Automate(int nbrEtat, HashSet<Character> alphabet){
+		this();
+		Random rand = new Random(System.currentTimeMillis());
+		
+		for(int i = 0; i < nbrEtat; i++){
+			this.ajouteEtatSeul(new Etat((rand.nextInt(10) < 3)? true: false, (rand.nextInt(10) < 4)? true: false, i));
+		}
+		
+		if(initiaux.isEmpty()) this.getEtat(0).setInit(true);
+		if(!this.contientTerminal()) this.getEtat(nbrEtat-1).setTerm(true);
+		
+		for(Etat etat : this){
+			for(Character c : alphabet){
+				for(Etat succ : this){
+					if(rand.nextInt(10) < 3) etat.ajouteTransition(c, succ);
+				}
+			}
+		}
+	}
     
     /**
      * Automate à partir du calcul des résiduels d'une expressions rationnelle.
