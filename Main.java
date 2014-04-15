@@ -319,6 +319,7 @@ public class Main{
 		boolean comparer = false;
 		boolean moore = false;
 		boolean residuel = false;
+		boolean glushkov = false;
 		
 		Cas cas = Cas.None;
 		
@@ -368,6 +369,8 @@ public class Main{
 				moore = true;
 			}else if(mot.equals("-r")){
 				residuel = true;
+			}else if(mot.equals("-G")){
+				glushkov = true;
 			}else{
 				throw new IllegalArgumentException("Argument inconnu : "+mot);
 			}
@@ -389,6 +392,7 @@ public class Main{
 			for(int i = 0; i < alphabetAlea.length(); i++)
 				alphabet.add(alphabetAlea.charAt(i));
 			automateDepart = new Automate(nombreAlea, alphabet);
+			System.out.println("--- AUTOMATE GENERE ---\n"+automateDepart);
 		}else{
 			throw new IllegalArgumentException("Aucun argument pour la génération d'un automate");
 		}
@@ -427,6 +431,7 @@ public class Main{
 		if(comparer) verif++;
 		if(moore) verif++;
 		if(residuel) verif++;
+		if(glushkov) verif++;
 		
 		if(verif == 0){
 			System.out.println("Aucune opération demandée");
@@ -514,6 +519,24 @@ public class Main{
 				System.out.println("--- MINIMISATION RESIDUELS ---\n"+un);
 			}else{
 				System.out.println("Les paramètres donnés ne permettent pas de réaliser une minimisation par les résiduels");
+				return;
+			}
+			
+			if(un != null && fichierEcriture != null){
+				System.out.println("Sauvegarde de l'automate ...");
+				un.toFile(fichierEcriture);
+			}
+		}
+		
+		
+		//GLUSHKOV
+		if(glushkov){
+			Automate un = null;
+			if(cas.equals(Cas.Exp)){
+				un = new Automate(arbreDepart);
+				System.out.println("--- GLUSHKOV ---\n"+un);
+			}else{
+				System.out.println("Les paramètres donnés ne permettrent pas de réaliser un algorithme de Glushkov");
 				return;
 			}
 			
