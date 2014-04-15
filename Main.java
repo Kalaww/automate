@@ -318,6 +318,7 @@ public class Main{
 		String alphabetAlea = null;
 		boolean comparer = false;
 		boolean moore = false;
+		boolean residuel = false;
 		
 		Cas cas = Cas.None;
 		
@@ -365,6 +366,8 @@ public class Main{
 				Main.INFO = true;
 			}else if(mot.equals("-m")){
 				moore = true;
+			}else if(mot.equals("-r")){
+				residuel = true;
 			}else{
 				throw new IllegalArgumentException("Argument inconnu : "+mot);
 			}
@@ -423,6 +426,7 @@ public class Main{
 		int verif = 0;
 		if(comparer) verif++;
 		if(moore) verif++;
+		if(residuel) verif++;
 		
 		if(verif == 0){
 			System.out.println("Aucune opération demandée");
@@ -442,7 +446,7 @@ public class Main{
 				un = new Automate(arbreDepart).minimisation();
 				System.out.println("--- MINIMISATION MOORE ---\n"+un);
 				deux = new Automate(Arbre.residuels(arbreDepart.copy()));
-				System.out.println("--- MINIMISATION RESIDUEL ---\n"+deux);
+				System.out.println("--- MINIMISATION RESIDUELS ---\n"+deux);
 			}else if(cas.equals(Cas.AutAut)){
 				un = automateDepart.minimisation();
 				System.out.println("--- MINIMISATION MOORE 1 ---\n"+un);
@@ -452,17 +456,17 @@ public class Main{
 				un = automateDepart.minimisation();
 				System.out.println("--- MINIMISATION MOORE ---\n"+un);
 				deux = new Automate(Arbre.residuels(arbreDepart2));
-				System.out.println("--- MINIMISATION RESIDUEL ---\n"+deux);
+				System.out.println("--- MINIMISATION RESIDUELS ---\n"+deux);
 			}else if(cas.equals(Cas.ExpAut)){
 				un = new Automate(Arbre.residuels(arbreDepart));
-				System.out.println("--- MINIMISATION RESIDUEL ---\n"+un);
+				System.out.println("--- MINIMISATION RESIDUELS ---\n"+un);
 				deux = automateDepart2.minimisation();
 				System.out.println("--- MINIMISATION MOORE ---\n"+deux);
 			}else if(cas.equals(Cas.ExpExp)){
 				un = new Automate(Arbre.residuels(arbreDepart));
-				System.out.println("--- MINIMISATION RESIDUEL 1 ---\n"+un);
+				System.out.println("--- MINIMISATION RESIDUELS 1 ---\n"+un);
 				deux = new Automate(Arbre.residuels(arbreDepart2));
-				System.out.println("--- MINIMISATION RESIDUEL 2 ---\n"+deux);
+				System.out.println("--- MINIMISATION RESIDUELS 2 ---\n"+deux);
 			}else{
 				System.out.println("Les paramètres donnés ne permettrent pas de réaliser une comparaison");
 				return;
@@ -492,6 +496,24 @@ public class Main{
 				System.out.println("--- MINIMISATION MOORE ---\n"+un);
 			}else{
 				System.out.println("Les paramètres donnés ne permettrent pas de réaliser une minimisation par Moore");
+				return;
+			}
+			
+			if(un != null && fichierEcriture != null){
+				System.out.println("Sauvegarde de l'automate ...");
+				un.toFile(fichierEcriture);
+			}
+		}
+		
+		
+		//RESIDUEL
+		if(residuel){
+			Automate un = null;
+			if(cas.equals(Cas.Exp)){
+				un = new Automate(Arbre.residuels(arbreDepart));
+				System.out.println("--- MINIMISATION RESIDUELS ---\n"+un);
+			}else{
+				System.out.println("Les paramètres donnés ne permettent pas de réaliser une minimisation par les résiduels");
 				return;
 			}
 			
