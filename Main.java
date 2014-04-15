@@ -317,6 +317,7 @@ public class Main{
 		int nombreAlea = -1;
 		String alphabetAlea = null;
 		boolean comparer = false;
+		boolean moore = false;
 		
 		Cas cas = Cas.None;
 		
@@ -325,6 +326,8 @@ public class Main{
 		Arbre arbreDepart = null;
 		Arbre arbreDepart2 = null;
 		
+		
+		//Recupération des paramètres
 		for(int i = 0; i < args.length; i++){
 			String mot = args[i];
 			if(mot.equals("-f")){
@@ -360,10 +363,13 @@ public class Main{
 				comparer = true;
 			}else if(mot.equals("-i")){
 				Main.INFO = true;
+			}else if(mot.equals("-m")){
+				moore = true;
 			}else{
 				throw new IllegalArgumentException("Argument inconnu : "+mot);
 			}
 		}
+		
 		
 		//FICHIER 1
 		if(fichierLecture != null && (nombreAlea > -1 || alphabetAlea != null)){
@@ -384,6 +390,7 @@ public class Main{
 			throw new IllegalArgumentException("Aucun argument pour la génération d'un automate");
 		}
 		
+		
 		//FICHIER 2
 		if(fichierLecture2 != null){
 			String tmp = fichierContientExpRat(fichierLecture2);
@@ -393,6 +400,7 @@ public class Main{
 				automateDepart2 = new Automate(fichierLecture2);
 			}
 		}
+		
 		
 		//Gestion du cas des fichiers de lectures
 		if(fichierLecture2 == null){
@@ -405,43 +413,91 @@ public class Main{
 			else if(arbreDepart != null && arbreDepart2 != null) cas = Cas.ExpExp;
 		}
 		if(Main.DG) System.out.println("CAS : "+cas);
+		if(cas.equals(Cas.None)){
+			System.out.println("Aucun automate ou expression rationnelle en entrée");
+			return;
+		}
 			
+		
+		//Verification d'opérations multiples
+		int verif = 0;
+		if(comparer) verif++;
+		if(moore) verif++;
+		
+		if(verif == 0){
+			System.out.println("Aucune opération demandée");
+			return;
+		}
+		if(verif > 1){
+			System.out.println("Plus d'une opération demandée. Une seul peut être éxécutée par commande");
+			return;
+		}
+		
 		
 		//COMPARAISON
 		if(comparer){
+			Automate un = null, deux = null;
+			boolean egaux = false;
 			if(cas.equals(Cas.Exp)){
-				Automate minimalMoore = new Automate(arbreDepart).minimisation();
-				System.out.println("--- MINIMISATION MOORE ---\n"+minimalMoore);
-				Automate minimalResiduel = new Automate(Arbre.residuels(arbreDepart.copy()));
-				System.out.println("--- MINIMISATION RESIDUEL ---\n"+minimalResiduel);
-				System.out.println("Egaux : "+minimalMoore.estEgale(minimalResiduel));
+				un = new Automate(arbreDepart).minimisation();
+				System.out.println("--- MINIMISATION MOORE ---\n"+un);
+				deux = new Automate(Arbre.residuels(arbreDepart.copy()));
+				System.out.println("--- MINIMISATION RESIDUEL ---\n"+deux);
 			}else if(cas.equals(Cas.AutAut)){
-				Automate minimalMoore1 = automateDepart.minimisation();
-				System.out.println("--- MINIMISATION MOORE 1 ---\n"+minimalMoore1);
-				Automate minimalMoore2 = automateDepart2.minimisation();
-				System.out.println("--- MINIMISATION MOORE 2 ---\n"+minimalMoore2);
-				System.out.println("Egaux : "+minimalMoore1.estEgale(minimalMoore2));
+				un = automateDepart.minimisation();
+				System.out.println("--- MINIMISATION MOORE 1 ---\n"+un);
+				deux = automateDepart2.minimisation();
+				System.out.println("--- MINIMISATION MOORE 2 ---\n"+deux);
 			}else if(cas.equals(Cas.AutExp)){
-				Automate minimalMoore1 = automateDepart.minimisation();
-				System.out.println("--- MINIMISATION MOORE ---\n"+minimalMoore1);
-				Automate minimalRes = new Automate(Arbre.residuels(arbreDepart2));
-				System.out.println("--- MINIMISATION RESIDUEL ---\n"+minimalRes);
-				System.out.println("Egaux : "+minimalMoore1.estEgale(minimalRes));
+				un = automateDepart.minimisation();
+				System.out.println("--- MINIMISATION MOORE ---\n"+un);
+				deux = new Automate(Arbre.residuels(arbreDepart2));
+				System.out.println("--- MINIMISATION RESIDUEL ---\n"+deux);
 			}else if(cas.equals(Cas.ExpAut)){
-				Automate minimalRes = new Automate(Arbre.residuels(arbreDepart));
-				System.out.println("--- MINIMISATION RESIDUEL ---\n"+minimalRes);
-				Automate minimalMoore = automateDepart2.minimisation();
-				System.out.println("--- MINIMISATION MOORE ---\n"+minimalMoore);
-				System.out.println("Egaux : "+minimalMoore.estEgale(minimalRes));
+				un = new Automate(Arbre.residuels(arbreDepart));
+				System.out.println("--- MINIMISATION RESIDUEL ---\n"+un);
+				deux = automateDepart2.minimisation();
+				System.out.println("--- MINIMISATION MOORE ---\n"+deux);
 			}else if(cas.equals(Cas.ExpExp)){
-				Automate minimalRes1 = new Automate(Arbre.residuels(arbreDepart));
-				System.out.println("--- MINIMISATION RESIDUEL 1 ---\n"+minimalRes1);
-				Automate minimalRes2 = new Automate(Arbre.residuels(arbreDepart2));
-				System.out.println("--- MINIMISATION RESIDUEL 2 ---\n"+minimalRes2);
-				System.out.println("Egaux : "+minimalRes1.estEgale(minimalRes2));
+				un = new Automate(Arbre.residuels(arbreDepart));
+				System.out.println("--- MINIMISATION RESIDUEL 1 ---\n"+un);
+				deux = new Automate(Arbre.residuels(arbreDepart2));
+				System.out.println("--- MINIMISATION RESIDUEL 2 ---\n"+deux);
 			}else{
 				System.out.println("Les paramètres donnés ne permettrent pas de réaliser une comparaison");
 				return;
+			}
+			
+			if(un != null && deux != null) egaux = un.estEgale(deux);
+			System.out.println("Egaux : "+((egaux)? "Oui" : "Non"));
+			
+			if(egaux && fichierEcriture != null){
+				System.out.println("Sauvegarde de l'automate ...");
+				un.toFile(fichierEcriture);
+			}else if(!egaux && fichierEcriture != null){
+				System.out.println("Les deux automates ne sont pas égaux. Aucune sauvegarde réalisée");
+			}
+		}
+		
+		
+		//MOORE
+		if(moore){
+			Automate un = null;
+			if(cas.equals(Cas.Aut)){
+				un = automateDepart.minimisation();
+				System.out.println("--- MINIMISATION MOORE ---\n"+un);
+			}else if(cas.equals(Cas.Exp)){
+				un = new Automate(arbreDepart);
+				un = un.minimisation();
+				System.out.println("--- MINIMISATION MOORE ---\n"+un);
+			}else{
+				System.out.println("Les paramètres donnés ne permettrent pas de réaliser une minimisation par Moore");
+				return;
+			}
+			
+			if(un != null && fichierEcriture != null){
+				System.out.println("Sauvegarde de l'automate ...");
+				un.toFile(fichierEcriture);
 			}
 		}
 	}
