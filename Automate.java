@@ -57,6 +57,11 @@ public class Automate extends EnsEtat {
     	this.readFile(fichier);
     }
     
+    /**
+     * Automate généré aléatoirement
+     * @param nbrEtat nombre d'état
+     * @param alphabet alphabet de l'automate
+     */
     public Automate(int nbrEtat, HashSet<Character> alphabet){
 		this();
 		Random rand = new Random(System.currentTimeMillis());
