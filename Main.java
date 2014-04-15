@@ -404,6 +404,7 @@ public class Main{
 				Automate minimalResiduel = new Automate(Arbre.residuels(arbreDepart.copy()));
 				System.out.println("---MOORE---\n"+minimalMoore);
 				System.out.println("---RESIDUEL---\n"+minimalResiduel);
+				System.out.println("Egaux : "+minimalMoore.estEgale(minimalResiduel));
 			}
 				
 			

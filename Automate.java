@@ -520,18 +520,24 @@ public class Automate extends EnsEtat {
     	}
     }
     
-    /*
     public boolean estEgale(Automate test){
-		if(this.size() != test.size()) return false;
+		if(this.size() != test.size()){
+			System.out.println("Ne sont pas égaux : tailles differentes");
+			return false;
+		}
 		
-		if(!this.alphabet().equals(test.alphabet())) return false;
+		if(!this.alphabet().equals(test.alphabet())){
+			System.out.println("Ne sont pas égaux : alphabets differents");
+			return false;
+		}
 		
 		HashMap<Etat, Etat> map = new HashMap<Etat, Etat>();
 		ArrayList<Etat> liste = new ArrayList<Etat>();
 		Stack<Etat> pile = new Stack<Etat>();
+		Set<Character> alphabet = this.alphabet();
 		
-		if(this.initiaux.size() == 1 || test.initiaux.size() == 1){
-			System.out.println("Il y a pas ou plus d'un état initial");
+		if(this.initiaux.size() != 1 || test.initiaux.size() != 1){
+			System.out.println("Ne sont pas égaux : il y a pas ou plus d'un état initial");
 			return false;
 		}
 		
@@ -541,16 +547,26 @@ public class Automate extends EnsEtat {
 		while(!pile.isEmpty()){
 			Etat courant = pile.pop();
 			Etat lie = map.get(courant);
-			for(Map.Entry<Character, EnsEtat> entre : courant.transitions.entrySet()){
-				for(Etat succ : entre.getValue()){
-					Etat lieSucc = map.get(succ);
-					if(succ != null){
-						
+			for(Character c : alphabet){
+				EnsEtat ensSucc = courant.succ(c);
+				EnsEtat ensLieSucc = lie.succ(c);
+				if(ensSucc.size() > 0 && ensLieSucc.size() > 0){
+					if(ensSucc.size() != 1 || ensLieSucc.size() != 1){
+						System.out.println("Ne sont pas égaux : non déterminisé");
+						return false;
+					}
+					Etat courantSucc = ensSucc.iterator().next();
+					if(!liste.contains(courantSucc)){
+						Etat lieSucc = ensLieSucc.iterator().next();
+						liste.add(courantSucc);
+						map.put(courantSucc, lieSucc);
+						pile.push(courantSucc);
 					}
 				}
 			}
 		}
-	}*/
+		return true;
+	}
 
 	@Override
 	public String toString(){
