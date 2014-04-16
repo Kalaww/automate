@@ -35,6 +35,7 @@ public class Main{
 		boolean complementaire = false;
 		boolean miroir = false;
 		boolean determinise = false;
+		boolean complete = false;
 		
 		Cas cas = Cas.None;
 		
@@ -94,6 +95,8 @@ public class Main{
 				miroir = true;
 			}else if(mot.equals("-d")){
 				determinise = true;
+			}else if(mot.equals("-cmp")){
+				complete = true;
 			}else{
 				throw new IllegalArgumentException("Argument inconnu : "+mot);
 			}
@@ -158,6 +161,7 @@ public class Main{
 		if(complementaire) verif++;
 		if(miroir) verif++;
 		if(determinise) verif++;
+		if(complete) verif++;
 		
 		if(verif == 0){
 			System.out.println("Aucune opération demandée");
@@ -329,6 +333,28 @@ public class Main{
 				System.out.println("--- DETERMINISE ---\n"+un);
 			}else{
 				System.out.println("Les paramètres donnés ne permettrent pas de réaliser la determinisation");
+				return;
+			}
+			
+			if(un != null && fichierEcriture != null){
+				System.out.println("Sauvegarde de l'automate ...");
+				un.toFile(fichierEcriture);
+			}
+		}
+		
+		
+		//COMPLETE
+		if(complete){
+			Automate un = null;
+			if(cas.equals(Cas.Exp)){
+				un = new Automate(arbreDepart);
+				un = un.complete();
+				System.out.println("--- COMPLETE ---\n"+un);
+			}else if(cas.equals(Cas.Aut)){
+				un = automateDepart.complete();
+				System.out.println("--- COMPLETE ---\n"+un);
+			}else{
+				System.out.println("Les paramètres donnés ne permettrent pas de completer un automate");
 				return;
 			}
 			
