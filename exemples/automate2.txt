@@ -1,0 +1,32 @@
+9 Etats
+
+0 initial
+b 2 4
+a 1 3
+
+1 terminal
+b 6
+a 7
+
+2
+b 2 4
+a 3
+
+3 terminal
+
+4
+b 5
+
+5 terminal
+
+6 terminal
+b 6
+a 7
+
+7
+b 8
+
+8 terminal
+b 6
+a 7
+
