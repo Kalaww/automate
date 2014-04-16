@@ -351,6 +351,7 @@ public class Automate extends EnsEtat {
 			}
 		}
 		det.setMapDeterminise(map);
+		if(Main.INFO) System.out.println("--- AUTOMATE DETERMINISE ---\n"+det);
 		return det;
 	}
 	
@@ -367,7 +368,7 @@ public class Automate extends EnsEtat {
 			Etat lie = this.getEtat(e.hashCode());
 			for(Map.Entry<Character, EnsEtat> entre : lie.transitions.entrySet()){
 				for(Etat succ : entre.getValue()){
-					e.ajouteTransition(entre.getKey().charValue(), succ);
+					e.ajouteTransition(entre.getKey().charValue(), cp.getEtat(succ.hashCode()));
 				}
 			}
 		}
@@ -546,6 +547,11 @@ public class Automate extends EnsEtat {
     	}
     }
     
+    /**
+     * Test si l'automate minimal (déterminisé) est similaire a celui en paramètre
+     * @param test l'automate auquel le comparer
+     * @return résultat du test
+     */
     public boolean estEgale(Automate test){
 		if(this.size() != test.size()){
 			System.out.println("Ne sont pas égaux : tailles differentes");

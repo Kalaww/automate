@@ -5,12 +5,22 @@ import java.io.File;
 
 public class Main{
 	
+	/**
+	 * Enum pour les cas d'entrée de fichier
+	 */
 	private enum Cas{
 		None, Aut, Exp, AutAut, AutExp, ExpAut, ExpExp
 	};
 	
+	/**
+	 * Variable d'affichage des informations supplémentaires
+	 */
 	public static boolean INFO = false;
-	public static boolean DG = true;
+	
+	/**
+	 * Variable de débug
+	 */
+	public static boolean DG = false;
 	
 	public static void main(String[] args){
 		String fichierLecture = null;
@@ -22,6 +32,7 @@ public class Main{
 		boolean moore = false;
 		boolean residuel = false;
 		boolean glushkov = false;
+		boolean complementaire = false;
 		
 		Cas cas = Cas.None;
 		
@@ -67,12 +78,16 @@ public class Main{
 				comparer = true;
 			}else if(mot.equals("-i")){
 				Main.INFO = true;
-			}else if(mot.equals("-m")){
+			}else if(mot.equals("-M")){
 				moore = true;
 			}else if(mot.equals("-r")){
 				residuel = true;
 			}else if(mot.equals("-G")){
 				glushkov = true;
+			}else if(mot.equals("-d")){
+				Main.DG = true;
+			}else if(mot.equals("-cp")){
+				complementaire = true;
 			}else{
 				throw new IllegalArgumentException("Argument inconnu : "+mot);
 			}
@@ -134,6 +149,7 @@ public class Main{
 		if(moore) verif++;
 		if(residuel) verif++;
 		if(glushkov) verif++;
+		if(complementaire) verif++;
 		
 		if(verif == 0){
 			System.out.println("Aucune opération demandée");
@@ -247,8 +263,34 @@ public class Main{
 				un.toFile(fichierEcriture);
 			}
 		}
+		
+		
+		//COMPLEMENTAIRE
+		if(complementaire){
+			Automate un = null;
+			if(cas.equals(Cas.Exp)){
+				un = new Automate(arbreDepart);
+				un = un.complementaire();
+				System.out.println("--- COMPLEMENTAIRE ---\n"+un);
+			}else if(cas.equals(Cas.Aut)){
+				un = automateDepart.complementaire();
+				System.out.println("--- COMPLEMENTAIRE ---\n"+un);
+			}else{
+				System.out.println("Les paramètres donnés ne permettrent pas de réaliser le complémentaire");
+			}
+			
+			if(un != null && fichierEcriture != null){
+				System.out.println("Sauvegarde de l'automate ...");
+				un.toFile(fichierEcriture);
+			}
+		}
 	}
 	
+	/**
+	 * Test si le fichier contient une expression rationnelle
+	 * @param fichier nom du fichier
+	 * @return l'expression rationnelle si oui, null sinon
+	 */
 	public static String fichierContientExpRat(String fichier){
 		try{
 			Scanner sc = new Scanner(new File(fichier));
