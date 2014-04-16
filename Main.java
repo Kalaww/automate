@@ -26,6 +26,7 @@ public class Main{
 		String fichierLecture = null;
 		String fichierLecture2 = null;
 		String fichierEcriture = null;
+		String accepteMot = null;
 		int nombreAlea = -1;
 		String alphabetAlea = null;
 		boolean comparer = false;
@@ -36,6 +37,7 @@ public class Main{
 		boolean miroir = false;
 		boolean determinise = false;
 		boolean complete = false;
+		boolean accepte = false;
 		
 		Cas cas = Cas.None;
 		
@@ -97,6 +99,14 @@ public class Main{
 				determinise = true;
 			}else if(mot.equals("-cmp")){
 				complete = true;
+			}else if(mot.equals("-a")){
+				if(i+1 >= args.length){
+					throw new IllegalArgumentException("Pas de mot après -a");
+				}else{
+					accepteMot = args[i+1];
+					accepte = true;
+				}
+				i++;
 			}else{
 				throw new IllegalArgumentException("Argument inconnu : "+mot);
 			}
@@ -162,6 +172,7 @@ public class Main{
 		if(miroir) verif++;
 		if(determinise) verif++;
 		if(complete) verif++;
+		if(accepte) verif++;
 		
 		if(verif == 0){
 			System.out.println("Aucune opération demandée");
@@ -355,6 +366,29 @@ public class Main{
 				System.out.println("--- COMPLETE ---\n"+un);
 			}else{
 				System.out.println("Les paramètres donnés ne permettrent pas de completer un automate");
+				return;
+			}
+			
+			if(un != null && fichierEcriture != null){
+				System.out.println("Sauvegarde de l'automate ...");
+				un.toFile(fichierEcriture);
+			}
+		}
+		
+		
+		//ACCEPTE
+		if(accepte){
+			Automate un = null;
+			boolean res = false;
+			if(cas.equals(Cas.Exp)){
+				un = new Automate(arbreDepart);
+				res = un.accepte(accepteMot);
+				System.out.println("--- ACCEPTE ---\n"+((res)? "Oui" : "Non"));
+			}else if(cas.equals(Cas.Aut)){
+				res = automateDepart.accepte(accepteMot);
+				System.out.println("--- ACCEPTE ---\n"+((res)? "Oui" : "Non"));
+			}else{
+				System.out.println("Les paramètres donnés ne permettrent pas de vérifier si un automate accepte un mot");
 				return;
 			}
 			
