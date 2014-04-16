@@ -39,6 +39,7 @@ public class Main{
 		boolean complete = false;
 		boolean accepte = false;
 		boolean union = false;
+		boolean intersection = false;
 		
 		Cas cas = Cas.None;
 		
@@ -110,6 +111,8 @@ public class Main{
 				i++;
 			}else if(mot.equals("-u")){
 				union = true;
+			}else if(mot.equals("-in")){
+				intersection = true;
 			}else{
 				throw new IllegalArgumentException("Argument inconnu : "+mot);
 			}
@@ -177,6 +180,7 @@ public class Main{
 		if(complete) verif++;
 		if(accepte) verif++;
 		if(union) verif++;
+		if(intersection) verif++;
 		
 		if(verif == 0){
 			System.out.println("Aucune opération demandée");
@@ -428,7 +432,43 @@ public class Main{
 				un = un.union(deux);
 				System.out.println("--- UNION ---\n"+un);
 			}else{
-				System.out.println("Les paramètres donnés ne permettrent pas de réaliser une comparaison");
+				System.out.println("Les paramètres donnés ne permettrent pas de réaliser une union");
+				return;
+			}
+			
+			if(un != null && fichierEcriture != null){
+				System.out.println("Sauvegarde de l'automate ...");
+				un.toFile(fichierEcriture);
+			}
+		}
+		
+		
+		//INTERSECTION
+		if(intersection){
+			Automate un = null, deux = null;
+			boolean egaux = false;
+			if(cas.equals(Cas.AutAut)){
+				un = automateDepart;
+				deux = automateDepart2;
+				un = un.intersection(deux);
+				System.out.println("--- INTERSECTION ---\n"+un);
+			}else if(cas.equals(Cas.AutExp)){
+				un = automateDepart;
+				deux = new Automate(arbreDepart2);
+				un = un.intersection(deux);
+				System.out.println("--- INTERSECTION ---\n"+un);
+			}else if(cas.equals(Cas.ExpAut)){
+				un = new Automate(arbreDepart);
+				deux = automateDepart2;
+				un = un.intersection(deux);
+				System.out.println("--- INTERSECTION ---\n"+un);
+			}else if(cas.equals(Cas.ExpExp)){
+				un = new Automate(arbreDepart);
+				deux = new Automate(arbreDepart2);
+				un = un.intersection(deux);
+				System.out.println("--- INTERSECTION ---\n"+un);
+			}else{
+				System.out.println("Les paramètres donnés ne permettrent pas de réaliser une intersection");
 				return;
 			}
 			
