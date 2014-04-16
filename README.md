@@ -24,11 +24,11 @@
 `-i` : affiche des informations supplémentaires pendant les opérations. (ex : les étapes de l’algorithme de minimisation de Moore).
 
 #EXEMPLES :
-	Main –c –f fichier.txt –f2 fichier2.txt
-	Main –c –f fichier.txt –w sauvegegarde.txt
-	Main –M –g 14 abcdef –w sauvegarde.txt
-	Main –G –f fichier.txt
-	Main –a ababab –f fichier.txt
-	Main –u –g 4 abc –f2 fichier2.txt –w sauvegarde.txt
-	Main –cmp  -g 56 abdefghijkl
+	`Main –c –f fichier.txt –f2 fichier2.txt`
+	`Main –c –f fichier.txt –w sauvegegarde.txt`
+	`Main –M –g 14 abcdef –w sauvegarde.txt`
+	`Main –G –f fichier.txt`
+	`Main –a ababab –f fichier.txt`
+	`Main –u –g 4 abc –f2 fichier2.txt –w sauvegarde.txt`
+	`Main –cmp  -g 56 abdefghijkl`
 
