@@ -34,6 +34,7 @@ public class Main{
 		boolean glushkov = false;
 		boolean complementaire = false;
 		boolean miroir = false;
+		boolean determinise = false;
 		
 		Cas cas = Cas.None;
 		
@@ -85,12 +86,14 @@ public class Main{
 				residuel = true;
 			}else if(mot.equals("-G")){
 				glushkov = true;
-			}else if(mot.equals("-d")){
+			}else if(mot.equals("-dg")){
 				Main.DG = true;
 			}else if(mot.equals("-cp")){
 				complementaire = true;
 			}else if(mot.equals("-m")){
 				miroir = true;
+			}else if(mot.equals("-d")){
+				determinise = true;
 			}else{
 				throw new IllegalArgumentException("Argument inconnu : "+mot);
 			}
@@ -154,6 +157,7 @@ public class Main{
 		if(glushkov) verif++;
 		if(complementaire) verif++;
 		if(miroir) verif++;
+		if(determinise) verif++;
 		
 		if(verif == 0){
 			System.out.println("Aucune opération demandée");
@@ -297,10 +301,10 @@ public class Main{
 			if(cas.equals(Cas.Exp)){
 				un = new Automate(arbreDepart);
 				un = un.miroir();
-				System.out.println("--- miroir ---\n"+un);
+				System.out.println("--- MIROIR ---\n"+un);
 			}else if(cas.equals(Cas.Aut)){
 				un = automateDepart.miroir();
-				System.out.println("--- miroir ---\n"+un);
+				System.out.println("--- MIROIR ---\n"+un);
 			}else{
 				System.out.println("Les paramètres donnés ne permettrent pas de réaliser le miroir");
 				return;
@@ -313,6 +317,26 @@ public class Main{
 		}
 		
 		
+		//DETERMINISE
+		if(determinise){
+			Automate un = null;
+			if(cas.equals(Cas.Exp)){
+				un = new Automate(arbreDepart);
+				un = un.determinise();
+				System.out.println("--- DETERMINISE ---\n"+un);
+			}else if(cas.equals(Cas.Aut)){
+				un = automateDepart.determinise();
+				System.out.println("--- DETERMINISE ---\n"+un);
+			}else{
+				System.out.println("Les paramètres donnés ne permettrent pas de réaliser la determinisation");
+				return;
+			}
+			
+			if(un != null && fichierEcriture != null){
+				System.out.println("Sauvegarde de l'automate ...");
+				un.toFile(fichierEcriture);
+			}
+		}
 	}
 	
 	/**
