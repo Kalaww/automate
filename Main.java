@@ -33,6 +33,7 @@ public class Main{
 		boolean residuel = false;
 		boolean glushkov = false;
 		boolean complementaire = false;
+		boolean miroir = false;
 		
 		Cas cas = Cas.None;
 		
@@ -88,6 +89,8 @@ public class Main{
 				Main.DG = true;
 			}else if(mot.equals("-cp")){
 				complementaire = true;
+			}else if(mot.equals("-m")){
+				miroir = true;
 			}else{
 				throw new IllegalArgumentException("Argument inconnu : "+mot);
 			}
@@ -150,6 +153,7 @@ public class Main{
 		if(residuel) verif++;
 		if(glushkov) verif++;
 		if(complementaire) verif++;
+		if(miroir) verif++;
 		
 		if(verif == 0){
 			System.out.println("Aucune opération demandée");
@@ -277,6 +281,7 @@ public class Main{
 				System.out.println("--- COMPLEMENTAIRE ---\n"+un);
 			}else{
 				System.out.println("Les paramètres donnés ne permettrent pas de réaliser le complémentaire");
+				return;
 			}
 			
 			if(un != null && fichierEcriture != null){
@@ -284,6 +289,30 @@ public class Main{
 				un.toFile(fichierEcriture);
 			}
 		}
+		
+		
+		//MIROIR
+		if(miroir){
+			Automate un = null;
+			if(cas.equals(Cas.Exp)){
+				un = new Automate(arbreDepart);
+				un = un.miroir();
+				System.out.println("--- miroir ---\n"+un);
+			}else if(cas.equals(Cas.Aut)){
+				un = automateDepart.miroir();
+				System.out.println("--- miroir ---\n"+un);
+			}else{
+				System.out.println("Les paramètres donnés ne permettrent pas de réaliser le miroir");
+				return;
+			}
+			
+			if(un != null && fichierEcriture != null){
+				System.out.println("Sauvegarde de l'automate ...");
+				un.toFile(fichierEcriture);
+			}
+		}
+		
+		
 	}
 	
 	/**
