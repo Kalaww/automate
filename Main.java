@@ -38,6 +38,7 @@ public class Main{
 		boolean determinise = false;
 		boolean complete = false;
 		boolean accepte = false;
+		boolean union = false;
 		
 		Cas cas = Cas.None;
 		
@@ -107,6 +108,8 @@ public class Main{
 					accepte = true;
 				}
 				i++;
+			}else if(mot.equals("-u")){
+				union = true;
 			}else{
 				throw new IllegalArgumentException("Argument inconnu : "+mot);
 			}
@@ -173,6 +176,7 @@ public class Main{
 		if(determinise) verif++;
 		if(complete) verif++;
 		if(accepte) verif++;
+		if(union) verif++;
 		
 		if(verif == 0){
 			System.out.println("Aucune opération demandée");
@@ -389,6 +393,42 @@ public class Main{
 				System.out.println("--- ACCEPTE ---\n"+((res)? "Oui" : "Non"));
 			}else{
 				System.out.println("Les paramètres donnés ne permettrent pas de vérifier si un automate accepte un mot");
+				return;
+			}
+			
+			if(un != null && fichierEcriture != null){
+				System.out.println("Sauvegarde de l'automate ...");
+				un.toFile(fichierEcriture);
+			}
+		}
+		
+		
+		//UNION
+		if(union){
+			Automate un = null, deux = null;
+			boolean egaux = false;
+			if(cas.equals(Cas.AutAut)){
+				un = automateDepart;
+				deux = automateDepart2;
+				un = un.union(deux);
+				System.out.println("--- UNION ---\n"+un);
+			}else if(cas.equals(Cas.AutExp)){
+				un = automateDepart;
+				deux = new Automate(arbreDepart2);
+				un = un.union(deux);
+				System.out.println("--- UNION ---\n"+un);
+			}else if(cas.equals(Cas.ExpAut)){
+				un = new Automate(arbreDepart);
+				deux = automateDepart2;
+				un = un.union(deux);
+				System.out.println("--- UNION ---\n"+un);
+			}else if(cas.equals(Cas.ExpExp)){
+				un = new Automate(arbreDepart);
+				deux = new Automate(arbreDepart2);
+				un = un.union(deux);
+				System.out.println("--- UNION ---\n"+un);
+			}else{
+				System.out.println("Les paramètres donnés ne permettrent pas de réaliser une comparaison");
 				return;
 			}
 			
