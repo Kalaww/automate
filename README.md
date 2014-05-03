@@ -14,13 +14,16 @@
 - `-cmp` : calcul le complémentaire de l’automate/expression rationnelle.  
 - `-a [mot]` : vérifie si le mot appartient au langage de l’automate/expression rationnelle.  
 - `-u` : calcul l’union de deux automates/expressions rationnelles.  
-- `-in` : calcul l’intersection de deux automates/expression rationnelles.  
+- `-in` : calcul l’intersection de deux automates/expression rationnelles. 
+
 ###ENTREES :  
 - `-f [fichier]` : prend le nom du fichier contenant un automate ou une expression rationnelle sous forme post-fixe.  
 - `-f2 [fichier]` : prend le nom du fichier contenant un automate ou une expression rationnelle sous forme post-fixe. Dois être utilisé seulement comme deuxième entrée fichier s’ils l’ont souhaite comparer deux automates (donc avec `–f` ou `–g`).  
-- `-g [nombre d’états] [alphabet]` : génère un automate aléatoirement contenant un nombre d’états défini et un alphabet sous forme d’une chaîne de caractères contenant les lettres de l’alphabet.  
+- `-g [nombre d’états] [alphabet]` : génère un automate aléatoirement contenant un nombre d’états défini et un alphabet sous forme d’une chaîne de caractères contenant les lettres de l’alphabet. 
+
 ###SORTIES :
-- `-w [fichier]` : une fois qu’une opération est terminée, il y a possibilité de sauvegarder l’automate obtenu dans un fichier. Pour une comparaison, la sauvegarde est réalisé que si les deux entrées sont bien équivalentes et sauvegarde l’automate minimal de la première entrée.  
+- `-w [fichier]` : une fois qu’une opération est terminée, il y a possibilité de sauvegarder l’automate obtenu dans un fichier. Pour une comparaison, la sauvegarde est réalisé que si les deux entrées sont bien équivalentes et sauvegarde l’automate minimal de la première entrée.
+
 ###OPTIONS :
 - `-i` : affiche des informations supplémentaires pendant les opérations. (ex : les étapes de l’algorithme de minimisation de Moore).  
 
